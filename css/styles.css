@@ -11,7 +11,7 @@ body {
 	background-color: #fdfdfd;
 	margin: 0 auto;
 	position:relative;
-  max-width: 1100px;
+  max-width: 1150px;
 }
 ul, li {
 	font-family: Arial, Helvetica, sans-serif;
@@ -61,7 +61,7 @@ nav h1 {
 }
 nav h1 a {
   color: #fff;
-  font-size: 1em;
+  font-size: 2em;
   font-weight: 200;
   letter-spacing: 10px;
   text-transform: uppercase;
@@ -137,6 +137,9 @@ nav h1 a {
   margin: 0;
   padding: 30px 15px 60px;
   text-align: center;
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
 }
 #restaurants-list li {
   background-color: #fff;
@@ -147,6 +150,7 @@ nav h1 a {
   padding: 0 30px 25px;
   text-align: left;
   width: 270px;
+  flex-grow: 1;
 }
 #restaurants-list .restaurant-img {
   background-color: #ccc;
