@@ -34,7 +34,7 @@ a img{
 	border: none 0px #fff;
 }
 h1, h2, h3, h4, h5, h6 {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Abel", Helvetica, sans-serif;
   margin: 0 0 20px;
 }
 article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
@@ -167,7 +167,7 @@ nav h1 a {
 }
 #restaurants-list li h1 {
   color: #f18200;
-  font-family: Arial,sans-serif;
+  font-family: Arial, sans-serif;
   font-size: 1.2em;
   font-weight: 200;
   letter-spacing: 0;
@@ -290,11 +290,11 @@ nav h1 a {
 
 @media screen and (max-width: 600px) {
   nav h1 a {
-    font-size: 1em;
-    font-weight: 300;
-    line-height: 3.3;
+    font-size: 1.3em;
+    font-weight: 100;
+    line-height: 2.6;
     vertical-align: bottom;
-    letter-spacing: 5px;
+    letter-spacing: 6px;
   }
 
   .filter-select-wrapper {
@@ -307,9 +307,9 @@ nav h1 a {
 
 @media screen and (min-width: 601px) {
   nav h1 a {
-    font-size: 1.5em;
+    font-size: 1.8em;
     vertical-align: bottom;
-    line-height: 2.2;
+    line-height: 2;
     letter-spacing: 10px;
     font-weight: 100;
   }
@@ -320,9 +320,9 @@ nav h1 a {
 
 @media screen and (min-width: 900px) {
   nav h1 a {
-    font-size: 2em;
+    font-size: 2.2em;
     vertical-align: bottom;
-    line-height: 1.8;
+    line-height: 1.5;
     letter-spacing: 12px;
     font-weight: 100;
   }
