@@ -23,7 +23,7 @@ ul, li {
 	color: #333;
 }
 a {
-	color: orange;
+	color: #ff8300;
 	text-decoration: none;
 }
 a:hover, a:focus {
@@ -43,6 +43,8 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 #maincontent {
   background-color: #f3f3f3;
   min-height: 100%;
+/*  display: flex;
+  flex-direction: column;*/
 }
 #footer {
   background-color: #444;
@@ -153,15 +155,8 @@ nav h1 a {
   min-height: 380px;
   padding: 15px;
   text-align: left;
-/*  display: flex;
-  align-content: space-around;
-  flex-wrap: wrap;*/
-  /*min-width: 270px;*/
   max-width: 300px;
-  /*position: relative;*/
 }
-
-
 
 #restaurants-list .restaurant-img {
   background-color: #ccc;
@@ -169,7 +164,6 @@ nav h1 a {
   margin: 0;
   max-width: 100%;
   min-width: 100%;
-  /*max-height: 300px;*/
 }
 
 #restaurants-list .textArea {
@@ -187,7 +181,7 @@ nav h1 a {
 }
 
 #restaurants-list li h1 {
-  color: #f18200;
+  color: #ff8300;
   font-family: Arial, sans-serif;
   font-size: 16px;
   font-weight: 200;
@@ -203,7 +197,7 @@ nav h1 a {
   width: 100%;
 }
 #restaurants-list li a {
-  background-color: orange;
+  background-color: #ff8300;
   border-bottom: 3px solid #eee;
   color: #fff;
   display: inline-block;
@@ -216,19 +210,19 @@ nav h1 a {
 }
 
 /* ====================== Restaurant Details ====================== */
-.inside header {
+/*.inside header {
   position: fixed;
   top: 0;
   width: 100%;
   z-index: 1000;
-}
+}*/
 .inside #map-container {
   background: blue none repeat scroll 0 0;
-  height: 87%;
-  position: fixed;
+  height: 200px;
+  /*position: fixed;
   right: 0;
   top: 80px;
-  width: 50%;
+  width: 50%;*/
 }
 .inside #map {
   background-color: #ccc;
@@ -241,7 +235,7 @@ nav h1 a {
   width: 50%;
 }
 #restaurant-name {
-  color: #f18200;
+  color: #ff8300;
   font-family: Arial,sans-serif;
   font-size: 20pt;
   font-weight: 200;
@@ -272,7 +266,7 @@ nav h1 a {
 #restaurant-container, #reviews-container {
   border-bottom: 1px solid #d9d9d9;
   border-top: 1px solid #fff;
-  padding: 140px 40px 30px;
+  padding: 40px;
   width: 50%;
 }
 #reviews-container {
