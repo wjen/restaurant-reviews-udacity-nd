@@ -249,7 +249,7 @@ nav h1 a {
 #restaurant-img {
 	width: 100%;
   object-fit:cover;
-  height: 50vh;
+  height: 60vh;
   max-height: 400px;
 }
 #restaurant-address {
@@ -308,6 +308,27 @@ nav h1 a {
   color: #666;
 }
 
+.reviewer-name {
+  font-weight: 800;
+  font-size: 1.2em;
+  color: rgba(0,0,0,.95);
+}
+.review-date {
+  font-weight: 400;
+  color: rgba(0,0,0,.6);
+}
+.review-rating {
+  font-weight: 200;
+  color: rgba(0,0,0,.8);
+}
+.review-comments {
+  font-weight: 100;
+  color: rgba(0,0,0,.8)
+}
+
+#restaurant-hours {
+  margin: 15px 10px 10px 10px;
+}
 /*
 ** Media Queries
 */
