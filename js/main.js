@@ -160,12 +160,14 @@ createRestaurantHTML = (restaurant) => {
 
   const image = document.createElement('img');
   image.className = 'restaurant-img';
-  const imageUrlBase = DBHelper.imageUrlForRestaurant(restaurant, 'tiles');
+  const imgUrlBase = DBHelper.imageUrlForRestaurant(restaurant, 'tiles');
+  console.log(imgUrlBase);
   const imgparts = imgUrlBase.split('.');
-  const imgurl1x = imgparts[0] + '1_x' + imgparts[1];
-  const imgurl2x = imgparts[0] + '2_x' + imgparts[1];
+  const imgurl1x = imgparts[0] + '-400_1x.' + imgparts[1];
+  const imgurl2x = imgparts[0] + '-800_2x.' + imgparts[1];
   image.src = imgurl1x;
-  image.srcset = `$(imgurl1x) 300w, ${imgurl2x} 600w`;
+  console.log(image.src);
+  image.srcset = `${imgurl1x} 400w, ${imgurl2x} 800w`;
   image.alt = restaurant.name + ' restaurant image';
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
   li.append(image);

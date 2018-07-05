@@ -198,7 +198,7 @@ nav h1 a {
   font-size: 11pt;
   width: 100%;
 }
-#restaurants-list li a {
+#restaurants-list li button {
   background-color: #ff8300;
   border-bottom: 3px solid #eee;
   color: #fff;
