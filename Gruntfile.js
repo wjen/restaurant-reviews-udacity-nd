@@ -14,6 +14,16 @@ module.exports = function(grunt) {
             width: 600,
             suffix: '_2x',
             quality: 30
+          },
+          {
+            width: 400,
+            suffix: '_1x',
+            quality: 30
+          },
+          {
+            width: 800,
+            suffix: '_2x',
+            quality: 30
           }]
         },
 
@@ -37,21 +47,12 @@ module.exports = function(grunt) {
       },
     },
 
-    /* Generate the images directory if it is missing */
-    mkdir: {
-      dev: {
-        options: {
-          create: ['images']
-        },
-      },
-    },
-
   });
 
   grunt.loadNpmTasks('grunt-responsive-images');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-mkdir');
-  grunt.registerTask('default', ['clean', 'mkdir', 'responsive_images']);
+  grunt.registerTask('default', ['clean', 'responsive_images']);
 
 };
