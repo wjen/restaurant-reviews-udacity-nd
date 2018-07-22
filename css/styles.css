@@ -105,9 +105,14 @@ nav h1 a {
 }
 
 /* Add a color on mouse-over */
-#breadcrumb li a:hover {
-    color: #01447e;
-    text-decoration: underline;
+#breadcrumb li a:hover,
+#breadcrumb li a:focus {
+  background: #C2185B;
+  color: #FFFFFF;
+  text-decoration: underline;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14),
+              0 3px 1px -2px rgba(0, 0, 0, .2),
+              0 1px 5px 0 rgba(0, 0, 0, .12);
 }
 /* ====================== Map ====================== */
 #map {
@@ -365,18 +370,4 @@ nav h1 a {
   #restaurants-list li {
     max-width: 29%;
   }
-}
-
-/*
-*** Hover and focus effects
-*/
-
-button:focus,
-button:hover {
-  background: #C2185B;
-  color: #FFFFFF;
-  text-decoration: underline;
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14),
-              0 3px 1px -2px rgba(0, 0, 0, .2),
-              0 1px 5px 0 rgba(0, 0, 0, .12);
 }
