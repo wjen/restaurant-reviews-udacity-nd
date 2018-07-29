@@ -26,7 +26,7 @@ self.addEventListener('install', event => {
 
 self.addEventListener('fetch', event => {
   let cacheRequest = event.request;
-  console.log('changed');
+  console.log('changed3');
   let cacheUrlObj = new URL(event.request.url);
   if (cacheUrlObj.hostname !== "localhost") {
     event.request.mode = "no-cors";

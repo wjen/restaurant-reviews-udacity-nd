@@ -120,6 +120,10 @@ nav h1 a {
   width: 100%;
   background-color: #ccc;
 }
+
+.aria-map-description {
+  display: none;
+}
 /* ====================== Restaurant Filtering ====================== */
 .filter-options {
   width: 100%;
