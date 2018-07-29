@@ -87,7 +87,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   address.innerHTML = restaurant.address;
 
   const image = document.getElementById('restaurant-img');
-  image.className = 'restaurant-img'
+  image.className = 'restaurant-img';
   const imgUrlBase = DBHelper.imageUrlForRestaurant(restaurant, 'tiles');
   const imgparts = imgUrlBase.split('.');
   const imgurl1x = imgparts[0] + '-400_1x.' + imgparts[1];

@@ -9,7 +9,7 @@ let urlsToCache = [
   '/js/dbhelper.js',
   '/js/main.js',
   '/js/restaurant_info.js',
-  '/js/sw/register.js'
+  '/js/sw/register.js',
 ];
 
 self.addEventListener('install', event => {
@@ -23,5 +23,33 @@ self.addEventListener('install', event => {
   );
 });
 
-self.addEventListener('fetch', event => {console.log(event.request);
+
+self.addEventListener('fetch', event => {
+  let cacheRequest = event.request;
+  console.log('changed');
+  let cacheUrlObj = new URL(event.request.url);
+  if (cacheUrlObj.hostname !== "localhost") {
+    event.request.mode = "no-cors";
+  }
+
+  event.respondWith(
+    caches.match(cacheRequest).then(response => {
+      return (
+        response || fetch(event.request)
+        .then(fetchResponse => {
+          return caches.open(cacheID).then(cache => {
+            cache.put(event.request, fetchResponse.clone());
+            return fetchResponse;
+          });
+        }).catch(error => {
+          return new Response('Application is not connected', {
+            status: 404,
+            statusText: "Application is not connected to internet"
+          });
+        })
+      );
+    })
+  );
 });
+
+
