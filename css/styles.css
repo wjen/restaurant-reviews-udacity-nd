@@ -75,6 +75,9 @@ nav h1 a {
   letter-spacing: 10px;
   text-transform: uppercase;
 }
+.breadcrumb {
+  text-align: left;
+}
 #breadcrumb {
     padding: 10px;
     list-style: none;
@@ -239,6 +242,7 @@ nav h1 a {
   background: blue none repeat scroll 0 0;
   height: 200px;
 }
+
 .inside #map {
   background-color: #ccc;
   height: 100%;
