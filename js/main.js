@@ -155,7 +155,6 @@ createRestaurantHTML = (restaurant) => {
   image.src = imgurl1x;
   image.srcset = `${imgurl1x} 1x, ${imgurl2x} 2x`;
   image.alt = restaurant.name + ' restaurant';
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
   li.append(image);
 
   const textArea = document.createElement('div')
@@ -176,7 +175,7 @@ createRestaurantHTML = (restaurant) => {
 
   const more = document.createElement('button');
   more.innerHTML = 'View Details';
-  // more.setAttribute("aria-label", "View Details for " + restaurant.name);
+  more.setAttribute("aria-label", restaurant.name + restaurant.neighborhood + restaurant.address + "View Details");
   more.onclick = () => {
     const url = DBHelper.urlForRestaurant(restaurant);
     window.location = url;
