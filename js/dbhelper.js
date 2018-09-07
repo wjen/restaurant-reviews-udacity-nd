@@ -8,8 +8,8 @@ class DBHelper {
    * Change this to restaurants.json file location on your server.
    */
   static get DATABASE_URL() {
-    const port = 8000 // Change this to your server port
-    return `http://localhost:${port}/data/restaurants.json`;
+    const port = 1337 // Change this to your server port
+    return `http://localhost:${port}/restaurants`;
   }
 
   /**
@@ -21,7 +21,8 @@ class DBHelper {
     fetch(DBHelper.DATABASE_URL).then((response) => {
       return response.json();
     }).then((data) => {
-      callback(null, data.restaurants);
+      console.log(data);
+      callback(null, data);
     }).catch((error) => {
       console.log('error', error);
     });
@@ -160,7 +161,9 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant, type) {
-    return (`/img/${type}/${restaurant.photograph}`);
+    console.log(restaurant);
+    console.log(restaurant.photograph);
+    return (`/img/${type}/${restaurant.photograph}`+'.jpg');
   }
 
   /**
