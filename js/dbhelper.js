@@ -15,13 +15,17 @@ class DBHelper {
   /**
    * Fetch all restaurants.
    */
-  static fetchRestaurants(callback) {
-
+  static fetchRestaurants(callback, id) {
     // Use Fetch instead of XHR
-    fetch(DBHelper.DATABASE_URL).then((response) => {
+    let fetchURL;
+    if(!id) {
+      fetchURL = DBHelper.DATABASE_URL;
+    } else {
+      fetchURL = DBHelper.DATABASE_URL + '/' + id;
+    }
+    fetch(fetchURL).then((response) => {
       return response.json();
     }).then((data) => {
-      console.log(data);
       callback(null, data);
     }).catch((error) => {
       console.log('error', error);
@@ -161,7 +165,6 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant, type) {
-    console.log(restaurant);
     console.log(restaurant.photograph);
     return (`/img/${type}/${restaurant.photograph}`+'.jpg');
   }

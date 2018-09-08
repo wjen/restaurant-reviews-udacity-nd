@@ -12,6 +12,7 @@ let urlsToCache = [
   '/js/sw/register.js',
 ];
 
+
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(cacheID).then(cache => {

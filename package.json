@@ -18,12 +18,16 @@
   "homepage": "https://github.com/wjen/mws-restaurant-stage-1#readme",
   "devDependencies": {
     "grunt": "^1.0.3",
+    "grunt-browserify": "^5.3.0",
     "grunt-contrib-clean": "^1.1.0",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-jshint": "^1.1.0",
     "grunt-mkdir": "^1.0.0"
   },
   "dependencies": {
-    "grunt-responsive-images": "^1.10.1"
+    "browserify": "^16.2.2",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-responsive-images": "^1.10.1",
+    "idb": "^2.1.3"
   }
 }
