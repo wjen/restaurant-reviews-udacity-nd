@@ -4,13 +4,47 @@ let urlsToCache = [
   '/index.html',
   '/restaurant.html',
   '/css/styles.css',
-  '/data/restaurants.json',
-  '/js',
   '/js/dbhelper.js',
   '/js/main.js',
   '/js/restaurant_info.js',
   '/js/sw/register.js',
+  '/js/idb.js'
 ];
+
+if (typeof idb === "undefined") {
+    self.importScripts('js/sw/idb.js');
+    self.importScripts('js/dbhelper.js');
+}
+
+
+const dbPromise = idb.open('restaurant-reviews', 1, upgradeDb => {
+  switch (upgradeDb.oldVersion) {
+    case 0:
+      upgradeDb.createObjectStore('restaurants', {
+        keyPath: 'id'
+      });
+  }
+});
+
+dbPromise.then(function(db) {
+    let restaurantsList;
+
+        fetch(DBHelper.DATABASE_URL).then(fetchResponse => {
+          console.log(fetchResponse);
+          return fetchResponse.json();
+        })
+        .then(json => {
+        var tx = db.transaction('restaurants', 'readwrite');
+        var reviewsStore = tx.objectStore('restaurants');
+          json.forEach(function(restaurant) {
+          console.log(restaurant);
+          reviewsStore.put(restaurant);
+    })
+        })
+
+
+
+});
 
 
 self.addEventListener('install', event => {

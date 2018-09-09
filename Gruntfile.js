@@ -47,13 +47,24 @@ module.exports = function(grunt) {
       },
     },
 
+    browserify: {
+      forIdb: {
+          src: [],
+          dest: 'dist/idb.browserified.js',
+          options: {
+              require: ['idb']
+          }
+      }
+    },
+
+
   });
-  // grunt.loadNpmTasks('grunt-contrib-concat');
-  // grunt.loadNpmTasks('grunt-browserify');
+  grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-responsive-images');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-mkdir');
-  grunt.registerTask('default', ['clean', 'responsive_images']);
+  grunt.registerTask('default', ['clean', 'responsive_images', 'browserify']);
 
 };
