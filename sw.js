@@ -8,7 +8,7 @@ let urlsToCache = [
   '/js/main.js',
   '/js/restaurant_info.js',
   '/js/sw/register.js',
-  '/js/idb.js'
+  '/js/sw/idb.js'
 ];
 
 if (typeof idb === "undefined") {
@@ -16,36 +16,32 @@ if (typeof idb === "undefined") {
     self.importScripts('js/dbhelper.js');
 }
 
+function createDB() {
+  const dbPromise = idb.open('restaurant-reviews', 1, upgradeDb => {
+    switch (upgradeDb.oldVersion) {
+      case 0:
+        upgradeDb.createObjectStore('restaurants', {
+          keyPath: 'id'
+        });
+    }
+  });
 
-const dbPromise = idb.open('restaurant-reviews', 1, upgradeDb => {
-  switch (upgradeDb.oldVersion) {
-    case 0:
-      upgradeDb.createObjectStore('restaurants', {
-        keyPath: 'id'
-      });
-  }
-});
+  dbPromise.then(function(db) {
 
-dbPromise.then(function(db) {
-    let restaurantsList;
-
-        fetch(DBHelper.DATABASE_URL).then(fetchResponse => {
-          console.log(fetchResponse);
-          return fetchResponse.json();
-        })
-        .then(json => {
-        var tx = db.transaction('restaurants', 'readwrite');
-        var reviewsStore = tx.objectStore('restaurants');
-          json.forEach(function(restaurant) {
-          console.log(restaurant);
-          reviewsStore.put(restaurant);
+   fetch(DBHelper.DATABASE_URL).then(fetchResponse => {
+      console.log(fetchResponse);
+      return fetchResponse.json();
     })
-        })
-
-
-
-});
-
+    .then(json => {
+    var tx = db.transaction('restaurants', 'readwrite');
+    var reviewsStore = tx.objectStore('restaurants');
+      json.forEach(function(restaurant) {
+      console.log(restaurant);
+      reviewsStore.put(restaurant);
+      })
+    })
+  });
+}
 
 self.addEventListener('install', event => {
   event.waitUntil(
@@ -58,12 +54,26 @@ self.addEventListener('install', event => {
   );
 });
 
+self.addEventListener('activate', function(event) {
+  event.waitUntil(
+    createDB()
+  );
+});
 
 self.addEventListener('fetch', event => {
   let cacheRequest = event.request;
+  console.log(cacheRequest);
   let cacheUrlObj = new URL(event.request.url);
+  console.log(cacheUrlObj);
+
   if (cacheUrlObj.hostname !== "localhost") {
     event.request.mode = "no-cors";
+  }
+
+  //Handle AJAX Requests Separately to use indexDB
+  const checkURL = new URL(event.request.url);
+  if(checkURL.port === '1337') {
+    const parts = checkURL.pathname.split("/");
   }
 
   event.respondWith(
