@@ -165,8 +165,12 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant, type) {
-    console.log(restaurant.photograph);
-    return (`/img/${type}/${restaurant.photograph}`+'.jpg');
+    console.log(restaurant);
+    if(restaurant.photograph) {
+      return `/img/${type}/${restaurant.photograph}`+'.jpg';
+    }
+
+    return  `/img/${type}/${restaurant.id}`+'.jpg';
   }
 
   /**
