@@ -1,17 +1,18 @@
 /**
  * Common database helper functions.
  */
+
 class DBHelper {
 
   /**
    * Database URL.
    * Change this to restaurants.json file location on your server.
    */
+
   static get DATABASE_URL() {
     const port = 1337 // Change this to your server port
     return `http://localhost:${port}/restaurants`;
   }
-
   /**
    * Fetch all restaurants.
    */
@@ -25,8 +26,9 @@ class DBHelper {
     }
     fetch(fetchURL).then((response) => {
       return response.json();
-    }).then((data) => {
-      callback(null, data);
+    }).then((restaurants) => {
+      console.log("restaurants JSON: ", restaurants);
+      callback(null, restaurants);
     }).catch((error) => {
       console.log('error', error);
     });
