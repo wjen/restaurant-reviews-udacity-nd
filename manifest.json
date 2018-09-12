@@ -4,15 +4,24 @@
   "start_url": "index.html",
   "display": "fullscreen",
   "background_color": "#fff",
+  "theme_color": "#fff",
   "theme-color": "#fff",
   "description": "A Progressive Web App for searching restaurant and their reviews",
   "icons": [{
-    "src": "images/touch/homescreen48.png",
+    "src": "img/icons/rr-icon48.png",
     "sizes": "48x48",
     "type": "image/png"
   }, {
-    "src": "images/touch/homescreen72.png",
-    "sizes": "72x72",
+    "src": "img/icons/rr-icon96.png",
+    "sizes": "96x96",
+    "type": "image/png"
+  }, {
+    "src": "img/icons/rr-icon192.png",
+    "sizes": "192x192",
+    "type": "image/png"
+  }, {
+    "src": "img/icons/rr-icon512.png",
+    "sizes": "512x512",
     "type": "image/png"
   }]
 }
