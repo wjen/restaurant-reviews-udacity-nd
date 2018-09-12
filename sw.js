@@ -71,7 +71,6 @@ const handleAJAXEvent = (event, id) => {
           fetch(event.request)
             .then(fetchResponse => fetchResponse.json())
             .then(json => {
-              console.log('hello');
               return dbPromise.then(db => {
                 const tx = db.transaction("restaurants", "readwrite");
                 tx.objectStore("restaurants").put({
@@ -100,6 +99,7 @@ const handleNonAJAXEvent = (event, cacheRequest) => {
         .then(fetchResponse => {
           return caches.open(cacheID).then(cache => {
             cache.put(event.request, fetchResponse.clone());
+            console.log(fetchResponse);
             return fetchResponse;
           });
         }).catch(error => {

@@ -25,6 +25,7 @@ class DBHelper {
       fetchURL = DBHelper.DATABASE_URL + '/' + id;
     }
     fetch(fetchURL).then((response) => {
+      console.log(response);
       return response.json();
     }).then((restaurants) => {
       console.log("restaurants JSON: ", restaurants);
