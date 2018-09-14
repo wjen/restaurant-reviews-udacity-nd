@@ -17,7 +17,7 @@ if (typeof idb === "undefined") {
 }
 function createDB() {
   idb.open('restaurant-reviews', 1, upgradeDB => {
-    var store = upgradeDB.createObjectStore('restaurants', {
+    let store = upgradeDB.createObjectStore('restaurants', {
       keyPath: 'id'
     });
   });
@@ -34,7 +34,7 @@ self.addEventListener('install', event => {
   );
 });
 
-self.addEventListener('activate', function(event) {
+self.addEventListener('activate', event => {
   event.waitUntil(
     createDB()
   );
