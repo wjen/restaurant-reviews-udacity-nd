@@ -1,4 +1,5 @@
 let cacheID = "mws-restaurant-01";
+let dbPromise;
 let urlsToCache = [
   '/',
   '/index.html',
@@ -15,7 +16,7 @@ if (typeof idb === "undefined") {
     self.importScripts('js/sw/idb.js');
 }
 function createDB() {
-  return dbPromise = idb.open('restaurant-reviews', 1, upgradeDB => {
+  idb.open('restaurant-reviews', 1, upgradeDB => {
     var store = upgradeDB.createObjectStore('restaurants', {
       keyPath: 'id'
     });
@@ -60,7 +61,7 @@ const handleAJAXEvent = (event, id) => {
   // If not, request it from the API, store it, and then
   // return it back.
   event.respondWith(
-    dbPromise
+    idb.open('restaurant-reviews', 1)
       .then(db => {
         return db
           .transaction("restaurants")
@@ -73,7 +74,7 @@ const handleAJAXEvent = (event, id) => {
           fetch(event.request)
             .then(fetchResponse => fetchResponse.json())
             .then(json => {
-              return dbPromise.then(db => {
+              return idb.open('restaurant-reviews', 1).then(db => {
                 const tx = db.transaction("restaurants", "readwrite");
                 tx.objectStore("restaurants").put({
                   id: id,
