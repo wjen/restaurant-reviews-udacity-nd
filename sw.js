@@ -14,15 +14,13 @@ let urlsToCache = [
 if (typeof idb === "undefined") {
     self.importScripts('js/sw/idb.js');
 }
-
-const dbPromise = idb.open('restaurant-reviews', 1, upgradeDb => {
-  switch (upgradeDb.oldVersion) {
-    case 0:
-      var store = upgradeDb.createObjectStore('restaurants', {
-        keyPath: 'id'
-      });
-  }
-});
+function createDB() {
+  return dbPromise = idb.open('restaurant-reviews', 1, upgradeDB => {
+    var store = upgradeDB.createObjectStore('restaurants', {
+      keyPath: 'id'
+    });
+  });
+}
 
 self.addEventListener('install', event => {
   event.waitUntil(
@@ -35,11 +33,15 @@ self.addEventListener('install', event => {
   );
 });
 
+self.addEventListener('activate', function(event) {
+  event.waitUntil(
+    createDB()
+  );
+});
 
 self.addEventListener('fetch', event => {
   let cacheRequest = event.request;
   let cacheUrlObj = new URL(event.request.url);
-  console.log(cacheUrlObj);
 
   // Handle AJAX Requests Separately to use indexDB
   const checkURL = new URL(event.request.url);

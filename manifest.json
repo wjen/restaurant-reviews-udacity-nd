@@ -5,7 +5,6 @@
   "display": "fullscreen",
   "background_color": "#fff",
   "theme_color": "#fff",
-  "theme-color": "#fff",
   "description": "A Progressive Web App for searching restaurant and their reviews",
   "icons": [{
     "src": "img/icons/rr-icon48.png",
