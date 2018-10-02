@@ -6,41 +6,41 @@
 }
 
 body,td,th,p{
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 1em;
-	color: #333;
-	line-height: 1.5;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1em;
+  color: #333;
+  line-height: 1.5;
 }
 body {
-	background-color: #fdfdfd;
-	margin: 0 auto;
-	position:relative;
+  background-color: #fdfdfd;
+  margin: 0 auto;
+  position:relative;
   max-width: 1100px;
 }
 ul, li {
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 15pt;
-	color: #333;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 15pt;
+  color: #333;
 }
 a {
-	color: #005E8A;
-	text-decoration: none;
+  color: #005E8A;
+  text-decoration: none;
 }
 a:hover, a:focus {
-	color: #3397db;
-	text-decoration: none;
+  color: #3397db;
+  text-decoration: none;
 }
 a img{
-	border: none 0px #fff;
+  border: none 0px #fff;
 }
 h1, h2, h3, h4, h5, h6 {
   font-family: Arial, Helvetica, sans-serif;
   margin: 0 0 20px;
 }
 article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
-	display: block;
+  display: block;
 }
-#maincontent {
+.maincontent {
   background-color: #f3f3f3;
   min-height: 100%;
 /*  display: flex;
@@ -218,10 +218,8 @@ nav h1 a {
   font-size: 11pt;
   width: 100%;
 }
-#restaurants-list li button {
-  background-color: #005E8A;
+.button {
   border-bottom: 3px solid #eee;
-  color: #fff;
   display: inline-block;
   font-size: 16px;
   margin: 15px 0 0;
@@ -231,8 +229,13 @@ nav h1 a {
   text-transform: uppercase;
 }
 
-#restaurants-list button:focus,
-#restaurants-list button:hover {
+.button--success {
+  color: #fff;
+  background-color: #005E8A;
+}
+
+#restaurants-list .button:focus,
+#restaurants-list .button:hover {
   background: #C2185B;
   color: #FFFFFF;
   text-decoration: underline;
@@ -262,7 +265,7 @@ nav h1 a {
   line-height: 1.1;
 }
 #restaurant-img {
-	width: 100%;
+  width: 100%;
   object-fit:cover;
   height: 60vh;
   max-height: 400px;
@@ -284,7 +287,7 @@ nav h1 a {
   padding: 2px 0;
   text-align: center;
   text-transform: uppercase;
-	width: 100%;
+  width: 100%;
 }
 #restaurant-container, #reviews-container {
   border-bottom: 1px solid #d9d9d9;
@@ -343,6 +346,14 @@ nav h1 a {
 .restaurant-info-label,
 .map-aria-description {
   display: none;
+}
+
+/*
+** Favorite Icons
+*/
+
+.far fa-thumbs-up {
+
 }
 /*
 ** Media Queries

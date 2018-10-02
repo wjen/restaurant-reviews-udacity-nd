@@ -174,6 +174,7 @@ createRestaurantHTML = (restaurant) => {
   textArea.append(address);
 
   const more = document.createElement('button');
+  more.classList = "button button--success";
   more.innerHTML = 'View Details';
   more.setAttribute("aria-label", restaurant.name + restaurant.neighborhood + restaurant.address + "View Details");
   more.onclick = () => {
