@@ -158,18 +158,38 @@ createRestaurantHTML = (restaurant) => {
   li.append(image);
 
   const textArea = document.createElement('div')
-  textArea.classList.add('textArea');
+  textArea.classList.add('body');
   li.append(textArea);
 
   const name = document.createElement('h2');
   name.innerHTML = restaurant.name;
   textArea.append(name);
 
+
+  const isFavorite = false;
+  const favDiv = document.createElement('div');
+  favDiv.className = "fav-icon";
+  const favButton = document.createElement('button');
+  favButton.style.background = isFavorite
+    ? 'url("/img/icons/heart-regular.svg")'
+    : 'url("/img/icons/heart-solid.svg")';
+  favButton.innerHTML = isFavorite
+    ? 'url("/img/icons/heart-regular.svg")'
+    : 'url("/img/icons/heart-solid.svg")';
+  favButton.id = "favorite-icon-" + restaurant.id;
+  favDiv.append(favButton)
+  textArea.append(favDiv);
+
+
+
+
   const neighborhood = document.createElement('p');
+  neighborhood.classList = 'body__text';
   neighborhood.innerHTML = restaurant.neighborhood;
   textArea.append(neighborhood);
 
   const address = document.createElement('p');
+  address.classList = 'body__text';
   address.innerHTML = restaurant.address;
   textArea.append(address);
 

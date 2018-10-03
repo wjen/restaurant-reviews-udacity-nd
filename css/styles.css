@@ -194,7 +194,7 @@ nav h1 a {
   max-width: 100%;
   min-width: 100%;
 }
-#restaurants-list .textArea {
+#restaurants-list .body {
   display: flex;
   /*padding: 0 25px;*/
   flex-direction: column;
@@ -213,7 +213,7 @@ nav h1 a {
   text-transform: uppercase;
   width: 100%;
 }
-#restaurants-list p {
+#restaurants-list .body__text {
   margin: 0;
   font-size: 11pt;
   width: 100%;
