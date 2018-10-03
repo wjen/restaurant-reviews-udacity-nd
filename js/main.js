@@ -166,16 +166,32 @@ createRestaurantHTML = (restaurant) => {
   textArea.append(name);
 
 
+  // console.log("is_favorite: ", restaurant["is_favorite"]);
+  // const isFavorite = (restaurant["is_favorite"] && restaurant["is_favorite"].toString() === "true") ? true : false;
+  // const favoriteDiv = document.createElement("div");
+  // favoriteDiv.className = "favorite-icon";
+  // const favorite = document.createElement("button");
+  // favorite.style.background = isFavorite
+  //   ? `url("/icons/002-like.svg") no-repeat`
+  //   : `url("icons/001-like-1.svg") no-repeat`;
+  // favorite.innerHTML = isFavorite
+  //   ? restaurant.name + " is a favorite"
+  //   : restaurant.name + " is not a favorite";
+  // favorite.id = "favorite-icon-" + restaurant.id;
+  // favorite.onclick = event => handleFavoriteClick(restaurant.id, !isFavorite);
+  // favoriteDiv.append(favorite);
+  // div.append(favoriteDiv);
+
   const isFavorite = false;
   const favDiv = document.createElement('div');
   favDiv.className = "fav-icon";
   const favButton = document.createElement('button');
   favButton.style.background = isFavorite
-    ? 'url("/img/icons/heart-regular.svg")'
-    : 'url("/img/icons/heart-solid.svg")';
+    ? 'url("/img/icons/heart-solid.svg") no-repeat'
+    : 'url("/img/icons/heart-regular.svg") no-repeat';
   favButton.innerHTML = isFavorite
-    ? 'url("/img/icons/heart-regular.svg")'
-    : 'url("/img/icons/heart-solid.svg")';
+    ? "restaurant.name" + " is favorited"
+    : "restaurant.name" + " is not favorite";
   favButton.id = "favorite-icon-" + restaurant.id;
   favDiv.append(favButton)
   textArea.append(favDiv);

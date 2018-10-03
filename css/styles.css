@@ -201,7 +201,26 @@ nav h1 a {
   min-height: 170px;
   max-height: 200px;
   justify-content: space-between;
+  position: relative;
 }
+
+.fav-icon {
+  position: absolute;
+  right: 0;
+}
+
+#restaurants-list li .fav-icon button, .maincontent .fav-icon button {
+  max-width: 25px;
+  max-height: 25px;
+  height: 25px;
+  cursor: pointer;
+  background-color: inherit;
+  border: none;
+  margin: 10px;
+  color: transparent;
+  overflow: hidden;
+}
+
 #restaurants-list li h2 {
   color: #005E8A;
   font-family: Arial, sans-serif;
