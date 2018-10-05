@@ -63,8 +63,26 @@ fetchRestaurantFromURL = (callback) => {
  * Create restaurant HTML and add it to the webpage
  */
 fillRestaurantHTML = (restaurant = self.restaurant) => {
+  const main = document.querySelector('.maincontent');
+  const isFavorite = (restaurant["is_favorite"] && restaurant["is_favorite"].toString() === "true") ? true : false;
+  const favDiv = document.createElement('div');
+  favDiv.className = "fav-icon fav-icon--info-page";
+  const favButton = document.createElement('button');
+  favButton.classList.add("fav-icon__button");
+  favButton.style.background = isFavorite
+    ? 'url("/img/icons/heart-solid.svg") no-repeat'
+    : 'url("/img/icons/heart-regular.svg") no-repeat';
+  favButton.innerHTML = isFavorite
+    ? "restaurant.name" + " is favorited"
+    : "restaurant.name" + " is not favorite";
+  favButton.id = "favorite-icon-" + restaurant.id;
+  favButton.onclick = event => handleFavoriteClick(restaurant.id, !isFavorite);
+  favDiv.append(favButton)
+  main.append(favDiv);
+
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
+
 
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;
