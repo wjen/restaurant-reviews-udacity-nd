@@ -13,6 +13,11 @@ class DBHelper {
     const port = 1337 // Change this to your server port
     return `http://localhost:${port}/restaurants`;
   }
+
+  static get DATABASE_REVIEWS_URL() {
+    const port = 1337
+    return `http://localhost:${port}/reviews`;
+  }
   /**
    * Fetch all restaurants.
    */
@@ -24,7 +29,7 @@ class DBHelper {
     } else {
       fetchURL = DBHelper.DATABASE_URL + '/' + id;
     }
-    fetch(fetchURL).then((response) => {
+    fetch(fetchURL).then(response => {
       return response.json();
     }).then((restaurants) => {
       console.log("restaurants JSON: ", restaurants);
@@ -65,6 +70,18 @@ class DBHelper {
         }
       }
     });
+  }
+
+  static fetchRestaurantReviewsById(id, callback) {
+    // Fetch all reviews for the specific restaurant
+    const fetchURL = DBHelper.DATABASE_REVIEWS_URL + "/?restaurant_id=" + id;
+    fetch(fetchURL).then(response => {
+      response.json()
+        .then(result => {
+          console.log(result);
+          callback(null, result);
+        })
+    }).catch(error => callback(error, null));
   }
 
   /**
