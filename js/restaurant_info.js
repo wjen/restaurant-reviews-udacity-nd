@@ -134,18 +134,23 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
  */
 fillReviewsHTML = (error, reviews) => {
   if(error) {
-    console.log(error);
+    console.log("Error Retrieving Restaraunt Reviews : ", error);
   }
+
   self.restaurant.reviews = reviews;
   const container = document.getElementById('reviews-container');
+  const flex = document.createElement('div');
+  flex.id = ('reviews-header');
+  container.appendChild(flex);
+
   const title = document.createElement('h3');
   title.innerHTML = 'Reviews';
-  container.appendChild(title);
+  flex.appendChild(title);
 
   const addReviewLink = document.createElement("a");
   addReviewLink.href = `/review.html?id{self.restaurant.id}`;
   addReviewLink.innerHTML = "Add Review";
-  container.appendChild(addReviewLink);
+  flex.appendChild(addReviewLink);
 
   if (!reviews) {
     const noReviews = document.createElement('p');

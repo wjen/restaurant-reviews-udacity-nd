@@ -318,6 +318,12 @@ nav h1 a {
 #reviews-container {
   padding: 30px 20px 80px;
 }
+#reviews-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+}
 #reviews-container h3 {
   color: #005E8A;
   font-size: 24pt;
