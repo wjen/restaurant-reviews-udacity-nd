@@ -49,13 +49,13 @@
       <div>
         <label for="reviewer-name">
           <span class="label-title">Your Name</span>
-          <input type="text" class="form-input" id="reviewer-name">
+          <input type="text" class="form__input form__input--textbox" id="reviewer-name">
         </label>
       </div>
       <div>
         <label for="reviewer-rating">
-          <span>Rating</span>
-          <select name="review-select" id="reviewer-rating">
+          <span class="label-title">Rating</span>
+          <select name="review-select" class="form__input" id="reviewer-rating">
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -67,11 +67,11 @@
       <div>
         <label for="comments">
           <span class="label-title">Comments</span>
-          <textarea name="reviewer-comments" class="form-input" id="comments" cols="20" rows="8"></textarea>
+          <textarea name="reviewer-comments" class="form__input form__input--textbox" id="comments" cols="20" rows="8"></textarea>
         </label>
       </div>
       <div>
-        <button class="button" onclick="saveReview()">Submit</button>
+        <button class="button button--success button-submit" onclick="saveReview()">Submit</button>
       </div>
 
     </section>

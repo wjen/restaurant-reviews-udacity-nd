@@ -240,6 +240,8 @@ nav h1 a {
   font-size: 11pt;
   width: 100%;
 }
+
+/* =========== Button Styles ============== */
 .button {
   border-bottom: 3px solid #eee;
   display: inline-block;
@@ -249,15 +251,18 @@ nav h1 a {
   text-align: center;
   text-decoration: none;
   text-transform: uppercase;
+  cursor: pointer;
 }
+
+.button-submit {}
 
 .button--success {
   color: #fff;
   background-color: #005E8A;
 }
 
-#restaurants-list .button:focus,
-#restaurants-list .button:hover {
+.button:focus,
+.button:hover {
   background: #C2185B;
   color: #FFFFFF;
   text-decoration: underline;
@@ -421,7 +426,7 @@ nav h1 a {
   width: 100%;
   margin: 0 auto;
   position: relative;
-  padding: 10px;
+  padding: 10px 10px 70px 10px;
 }
 
 .label-title {
@@ -430,14 +435,22 @@ nav h1 a {
   font-size: 1.2em;
 }
 
-.form-input {
+.form__input {
   font-size: 1.2em;
-  width: calc(100% - 20px);
   padding: 5px;
   margin: 10px;
 }
 
-.form--text-field {
-  width: 100%;
-  font-size: 16px;
+.form__input--textbox {
+  width: calc(100% - 20px);
 }
+
+.button-submit {
+  border-radius: 10px;
+  box-shadow: 2px 2px 1px #aaaaaa;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  margin: 10px;
+}
+
