@@ -414,3 +414,30 @@ nav h1 a {
     max-width: 29%;
   }
 }
+
+/* =========== Create Reviews Form =============== */
+.create-review-form {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+  padding: 10px;
+}
+
+.label-title {
+  display: block;
+  margin-top: 10px;
+  font-size: 1.2em;
+}
+
+.form-input {
+  font-size: 1.2em;
+  width: calc(100% - 20px);
+  padding: 5px;
+  margin: 10px;
+}
+
+.form--text-field {
+  width: 100%;
+  font-size: 16px;
+}
