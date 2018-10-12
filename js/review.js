@@ -14,7 +14,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 
 
-
+testfunction = () => {
+  self.test1 = 1;
+  const test2 = 2;
+}
 /**
  * Get current restaurant from page URL.
  */
