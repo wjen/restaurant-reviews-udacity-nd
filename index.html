@@ -31,18 +31,17 @@
     <label id="aria-map-description" class="aria-map-description">Leaflet map application</label>
     <section>
       <div class="filter-options">
-        <label>
           <h2>Filter Results</h2>
-            <div class="filter-select-wrapper">
-              <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()">
-                <option value="all">All Neighborhoods</option>
-              </select>
-              <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()">
-                <option value="all">All Cuisines</option>
-
-              </select>
-            </div>
-        </label>
+          <div class="filter-select-wrapper">
+            <select id="neighborhoods-select" name="neighborhoods" aria-labelledby="neighborhoods-label" onchange="updateRestaurants()">
+              <option value="all">All Neighborhoods</option>
+            </select>
+            <label id="neighborhoods-label" class="filter-label">Filter by neighborhoods</label>
+            <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()" aria-labelledby="cuisines-label">
+              <option value="all">All Cuisines</option>
+            </select>
+            <label id="cuisines-label" class="filter-label">Filter by cuisines</label>
+          </div>
       </div>
       <ul id="restaurants-list"></ul>
     </section>
