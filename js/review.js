@@ -4,35 +4,16 @@ var newMap;
  * Initialize map as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
-  initMap();
-});
-
-/**
- * Initialize leaflet map
- */
-initMap = () => {
   fetchRestaurantFromURL((error, restaurant) => {
     if (error) { // Got an error!
       console.error(error);
     } else {
-      self.newMap = L.map('map', {
-        center: [restaurant.latlng.lat, restaurant.latlng.lng],
-        zoom: 16,
-        scrollWheelZoom: false
-      });
-      L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.jpg70?access_token={mapboxToken}', {
-        mapboxToken: 'pk.eyJ1Ijoid2VudGluIiwiYSI6ImNqaXJ0N25iZjFwdjYza3A4MGt1aHU2bjEifQ.DnNFUoN5uzw01l_XK_c7nQ',
-        maxZoom: 18,
-        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-          '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-          'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-        id: 'mapbox.streets'
-      }).addTo(newMap);
       fillBreadcrumb();
-      DBHelper.mapMarkerForRestaurant(self.restaurant, self.newMap);
     }
   });
-};
+});
+
+
 
 /**
  * Get current restaurant from page URL.
@@ -83,10 +64,6 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
 
-
-  const address = document.getElementById('restaurant-address');
-  address.innerHTML = restaurant.address;
-
   const image = document.getElementById('restaurant-img');
   image.className = 'restaurant-img';
   const imgUrlBase = DBHelper.imageUrlForRestaurant(restaurant, 'tiles');
@@ -100,69 +77,6 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
 
-  // fill operating hours
-  if (restaurant.operating_hours) {
-    fillRestaurantHoursHTML();
-  }
-  // fill reviews
-  // fillReviewsHTML();
-  DBHelper.fetchRestaurantReviewsById(restaurant.id, fillReviewsHTML);
-};
-
-/**
- * Create restaurant operating hours HTML table and add it to the webpage.
- */
-fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => {
-  const hours = document.getElementById('restaurant-hours');
-  for (let key in operatingHours) {
-    const row = document.createElement('tr');
-
-    const day = document.createElement('td');
-    day.innerHTML = key;
-    row.appendChild(day);
-
-    const time = document.createElement('td');
-    time.innerHTML = operatingHours[key];
-    row.appendChild(time);
-
-    hours.appendChild(row);
-  }
-};
-
-/**
- * Create all reviews HTML and add them to the webpage.
- */
-fillReviewsHTML = (error, reviews) => {
-  if(error) {
-    console.log("Error Retrieving Restaraunt Reviews : ", error);
-  }
-
-  self.restaurant.reviews = reviews;
-  const container = document.getElementById('reviews-container');
-  const flex = document.createElement('div');
-  flex.id = ('reviews-header');
-  container.appendChild(flex);
-
-  const title = document.createElement('h3');
-  title.innerHTML = 'Reviews';
-  flex.appendChild(title);
-
-  const addReviewLink = document.createElement("a");
-  addReviewLink.href = `/create-review.html?id=${self.restaurant.id}`;
-  addReviewLink.innerHTML = "Add Review";
-  flex.appendChild(addReviewLink);
-
-  if (!reviews) {
-    const noReviews = document.createElement('p');
-    noReviews.innerHTML = 'No reviews yet!';
-    container.appendChild(noReviews);
-    return;
-  }
-  const ul = document.getElementById('reviews-list');
-  reviews.forEach(review => {
-    ul.appendChild(createReviewHTML(review));
-  });
-  container.appendChild(ul);
 };
 
 /**
@@ -195,20 +109,6 @@ createReviewHTML = (review) => {
 };
 
 /**
- * Add restaurant name to the breadcrumb navigation menu
- */
-fillBreadcrumb = (restaurant=self.restaurant) => {
-  const breadcrumb = document.getElementById('breadcrumb');
-  const li = document.createElement('li');
-  const a = document.createElement('a');
-  a.href = window.location;
-  a.innerHTML = restaurant.name;
-  a.setAttribute("aria-current", "page");
-  li.appendChild(a);
-  breadcrumb.appendChild(li);
-};
-
-/**
  * Get a parameter by name from page URL.
  */
 getParameterByName = (name, url) => {
@@ -219,4 +119,25 @@ getParameterByName = (name, url) => {
   if (!results) return null;
   if (!results[2]) return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
+};
+/**
+ * Add restaurant name to the breadcrumb navigation menu
+ */
+const fillBreadcrumb = (restaurant = self.restaurant) => {
+  const breadcrumb = document.getElementById("breadcrumb");
+  const li1 = document.createElement("li");
+  const a1 = document.createElement("a");
+  a1.href = "/restaurant.html?id=" + restaurant.id;
+  a1.innerHTML = restaurant.name;
+  li1.appendChild(a1);
+  breadcrumb.appendChild(li1);
+
+
+  const li2 = document.createElement("li");
+  const a2 = document.createElement("a");
+  a2.href = window.location;
+  a2.innerHTML = "Create Review";
+  a2.setAttribute("aria-current", "page");
+  li2.appendChild(a2);
+  breadcrumb.appendChild(li2);
 };
