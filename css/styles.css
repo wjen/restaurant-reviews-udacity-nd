@@ -3,6 +3,26 @@
 
 * {
   box-sizing: border-box;
+  margin:0;
+  padding:0;
+}
+
+/* Define base font-size here; most elements will inherit this. */
+html{
+    font-size:1em;      /* Assuming 16px... */
+    line-height:1.5;
+}
+
+/* Common margin-bottom for vertical rhythm. */
+h1,h2,h3,h4,h5,h6,
+ul,ol,dl,
+fieldset,
+p,
+table,
+pre,
+hr{
+    margin-bottom:24px;
+    margin-bottom:1.5rem;
 }
 
 body,td,th,p{
