@@ -11,6 +11,8 @@
 html{
     font-size:1em;      /* Assuming 16px... */
     line-height:1.5;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #333;
 }
 
 /* Common margin-bottom for vertical rhythm. */
@@ -25,26 +27,26 @@ hr{
     margin-bottom:1.5rem;
 }
 
-body,td,th,p{
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 1em;
-  color: #333;
-  line-height: 1.5;
-}
 body {
   background-color: #fdfdfd;
   margin: 0 auto;
   position:relative;
   max-width: 1100px;
 }
-ul, li {
+ul, #restaruants-list li {
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 15pt;
+  font-size: 15px;
   color: #333;
+  line-height: 1.6;
 }
 a {
   color: #005E8A;
   text-decoration: none;
+}
+.masthead a:hover,
+.masthead a:focus {
+  background: #333;
+  color: #C2185B;
 }
 a:hover, a:focus {
   background: #C2185B;
@@ -119,7 +121,7 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
     padding: 10px;
     list-style: none;
     background-color: #eee;
-    font-size: 17px;
+    font-size: 1em;
     margin: 0;
     max-width: 100%;
 }
@@ -142,16 +144,6 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   font-weight: bold;
 }
 
-/* Add a color on mouse-over */
-/*#breadcrumb li a:hover,
-#breadcrumb li a:focus {
-  background: #C2185B;
-  color: #FFFFFF;
-  text-decoration: underline;
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14),
-              0 3px 1px -2px rgba(0, 0, 0, .2),
-              0 1px 5px 0 rgba(0, 0, 0, .12);
-}*/
 /* ====================== Map ====================== */
 #map {
   height: 400px;
@@ -264,30 +256,31 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 #restaurants-list li h2 {
   color: #005E8A;
   font-family: Arial, sans-serif;
-  font-size: 16px;
+  font-size: 1em;
   font-weight: 200;
   letter-spacing: 0;
-  line-height: 1.3;
-  margin: 20px 0 10px;
+  line-height: 1.5;
+  margin: 20px 0 1.5em;
   text-transform: uppercase;
   width: 100%;
 }
-#restaurants-list .body__text {
+/*#restaurants-list .body__text {
   margin: 0;
   font-size: 11pt;
   width: 100%;
-}
+}*/
 
 /* =========== Button Styles ============== */
 .button {
   border-bottom: 3px solid #eee;
   display: inline-block;
-  font-size: 16px;
+  font-size: 1em;
   padding: 8px 30px 10px;
   text-align: center;
   text-decoration: none;
   text-transform: uppercase;
   cursor: pointer;
+  line-height: 1.5;
 }
 
 .button-submit {}
@@ -367,7 +360,7 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 }
 #reviews-container h3 {
   color: #005E8A;
-  font-size: 24pt;
+  font-size: 1.5em;
   font-weight: 300;
   letter-spacing: -1px;
   padding-bottom: 1pt;
@@ -396,6 +389,7 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   font-weight: 800;
   font-size: 1.2em;
   color: rgba(0,0,0,.95);
+  font
 }
 .review-date {
   font-weight: 400;
