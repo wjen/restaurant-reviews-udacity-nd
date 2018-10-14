@@ -27,8 +27,12 @@ a {
   text-decoration: none;
 }
 a:hover, a:focus {
-  color: #3397db;
-  text-decoration: none;
+  background: #C2185B;
+  color: #FFFFFF;
+  text-decoration: underline;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14),
+              0 3px 1px -2px rgba(0, 0, 0, .2),
+              0 1px 5px 0 rgba(0, 0, 0, .12);
 }
 a img{
   border: none 0px #fff;
@@ -58,26 +62,40 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   color: #00FFFF;
 }
 /* ====================== Navigation ====================== */
-nav {
-  width: 100%;
-  background-color: #333;
-  text-align: center;
+
+.nav{
+    list-style:none;
+    margin-left:0;
 }
-nav h1 {
-  margin: auto;
-  padding: 15px 0;
+    .nav > li,
+        .nav > li > a{
+            display:inline-block;
+           *display:inline;
+            zoom:1;
+    }
+
+.site-nav{
+    width:100%;
+    background:#eee;
 }
-nav h1 a {
-  color: #fff;
-  font-size: 2em;
-  font-weight: 200;
-  letter-spacing: 10px;
-  text-transform: uppercase;
+        .site-nav a{
+            padding:5px 10px;
+        }
+        .site-nav h1 {
+            margin: auto;
+            padding: 15px 0;
+            font-size: 2em;
+            font-weight: 200;
+        }
+
+.site-nav__main {
+    background-color: #333;
+    text-align: center;
+    color: #fff;
+    letter-spacing: 10px;
+    text-transform: uppercase;
 }
-.breadcrumb {
-  text-align: left;
-}
-#breadcrumb {
+.breadcrumb{
     padding: 10px;
     list-style: none;
     background-color: #eee;
@@ -85,32 +103,27 @@ nav h1 a {
     margin: 0;
     max-width: 100%;
 }
+    .breadcrumb li:before{
+        content:"» "
+    }
+    .breadcrumb li:first-child:before{
+        content:normal;
+    }
+    .breadcrumb [aria-current] {
+        font-weight: bold;
+    }
+
+
+.sponsors{
+  text-align:center;
+}
+
 #breadcrumb [aria-current] {
   font-weight: bold;
 }
 
-/* Display list items side by side */
-#breadcrumb li {
-    display: inline;
-    font-family: Arial, sans-serif;
-    font-weight: 100;
-}
-
-/* Add a slash symbol (/) before/behind each list item */
-#breadcrumb li+li:before {
-    padding: 8px;
-    color: black;
-    content: "/\00a0";
-}
-
-/* Add a color to all links inside the list */
-#breadcrumb li a {
-    color: #005E8A;
-    text-decoration: none;
-}
-
 /* Add a color on mouse-over */
-#breadcrumb li a:hover,
+/*#breadcrumb li a:hover,
 #breadcrumb li a:focus {
   background: #C2185B;
   color: #FFFFFF;
@@ -118,7 +131,7 @@ nav h1 a {
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14),
               0 3px 1px -2px rgba(0, 0, 0, .2),
               0 1px 5px 0 rgba(0, 0, 0, .12);
-}
+}*/
 /* ====================== Map ====================== */
 #map {
   height: 400px;
@@ -250,7 +263,6 @@ nav h1 a {
   border-bottom: 3px solid #eee;
   display: inline-block;
   font-size: 16px;
-  margin: 15px 0 0;
   padding: 8px 30px 10px;
   text-align: center;
   text-decoration: none;
@@ -389,8 +401,8 @@ nav h1 a {
 ** Media Queries
 */
 @media screen and (max-width: 650px) {
-  nav h1 a {
-    font-size: 1.3em;
+  .nav h1 a {
+    font-size: 1.2em;
     font-weight: 100;
     vertical-align: bottom;
     letter-spacing: 6px;
@@ -407,8 +419,8 @@ nav h1 a {
 }
 
 @media screen and (min-width: 651px) {
-  nav h1 a {
-    font-size: 1.8em;
+  .nav h1 a {
+    font-size: 1.4em;
     vertical-align: bottom;
     letter-spacing: 10px;
     font-weight: 100;
