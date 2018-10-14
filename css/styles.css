@@ -126,7 +126,8 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
     max-width: 100%;
 }
     .breadcrumb li:before{
-        content:"» "
+        content:"» ";
+        padding-left: 4px;
     }
     .breadcrumb li:first-child:before{
         content:normal;
@@ -138,10 +139,6 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 
 .sponsors{
   text-align:center;
-}
-
-#breadcrumb [aria-current] {
-  font-weight: bold;
 }
 
 /* ====================== Map ====================== */
