@@ -67,11 +67,11 @@
       <div>
         <label for="comments">
           <span class="label-title">Comments</span>
-          <textarea name="reviewer-comments" class="form__input form__input--textbox" id="comments" cols="20" rows="8"></textarea>
+          <textarea class="form__input form__input--textbox" id="comments" cols="20" rows="8"></textarea>
         </label>
       </div>
       <div>
-        <button class="button button--success button-submit" onclick="saveReview()">Submit</button>
+        <button class="button button--success button-submit" id='save-review-button' onclick="saveReview()">Submit</button>
       </div>
 
     </section>
@@ -89,11 +89,11 @@
   </footer>
   <!-- End footer -->
   <!-- Beginning scripts -->
+  <script type="application/javascript" charset="utf-8" src="js/sw/register.js"></script>
   <!-- Database helpers -->
   <script type="text/javascript" src="js/dbhelper.js"></script>
   <!-- Main javascript file -->
   <script type="text/javascript" src="js/review.js"></script>
-  <!-- <script type="application/javascript" charset="utf-8" src="js/sw/register.js"></script> -->
   <!-- End scripts -->
 
 </body>

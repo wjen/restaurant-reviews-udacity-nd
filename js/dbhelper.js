@@ -205,5 +205,51 @@ class DBHelper {
     return marker;
   }
 
+  static updateCachedRestaurantReview(id, bodyObj) {
+    console.log("updating cache for new review: ", bodyObj);
+    // Push the review into the reviews store
+    dbPromise.then(db => {
+      const tx = db.transaction("reviews", "readwrite");
+      const store = tx.objectStore("reviews");
+      console.log("putting cached review into store");
+      store.put({
+        id: Date.now(),
+        "restaurant_id": id,
+        data: bodyObj
+      });
+      console.log("successfully put cached review into store");
+      return tx.complete;
+    })
+  }
+
+  static saveNewReview(id, bodyObj, callback) {
+    // Push the request into the waiting queue in IDB
+    const url = `${DBHelper.DATABASE_REVIEWS_URL}`;
+    DBHelper.updateCachedRestaurantReview(id, bodyObj);
+    DBHelper.addPendingRequestToQueue(url, "POST", bodyObj);
+    callback(null, null);
+  }
+
+  static saveReview(id, name, rating, comment, callback) {
+    // Block submits unitl the callback finishes
+    const saveButton = document.getElementById('save-review-button');
+    saveButton.onclick = null;
+
+    const body = {
+      restaurant_id: id,
+      name: name,
+      rating: rating,
+      comments: comment,
+      createdAt: Date.now()
+    };
+
+    DBHelper.saveNewReview(id, body, (error, result) => {
+      if (error) {
+        callback(error, null);
+        return;
+      }
+      callback(null, result);
+   });
+  }
 }
 

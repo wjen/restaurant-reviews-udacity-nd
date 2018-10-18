@@ -17,11 +17,38 @@ if (typeof idb === "undefined") {
 }
 function createDB() {
   idb.open('restaurant-reviews', 1, upgradeDB => {
-    let store = upgradeDB.createObjectStore('restaurants', {
-      keyPath: 'id'
-    });
+    switch (upgradeDB.oldVersion) {
+      case 0:
+        upgradeDB.createObjectStore('restaurants', {
+          keyPath: 'id'
+        });
+      case 1:
+        const reviewsStore = upgradeDB.createObjectStore("reviews", {
+          keyPath: 'id'
+        });
+        reviewsStore.createIndex("restaurant_id", "restaurant_id");
+    }
+
   });
 }
+
+
+// const dbPromise = idb.open("fm-udacity-restaurant", 3, upgradeDB => {
+//   switch (upgradeDB.oldVersion) {
+//     case 0:
+//       upgradeDB.createObjectStore("restaurants", {keyPath: "id"});
+//     case 1:
+//       {
+//         const reviewsStore = upgradeDB.createObjectStore("reviews", {keyPath: "id"});
+//         reviewsStore.createIndex("restaurant_id", "restaurant_id");
+//       }
+//     case 2:
+//       upgradeDB.createObjectStore("pending", {
+//         keyPath: "id",
+//         autoIncrement: true
+//       });
+//   }
+// });
 
 self.addEventListener('install', event => {
   event.waitUntil(

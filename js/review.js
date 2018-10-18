@@ -1,3 +1,8 @@
+
+if (typeof idb === "undefined") {
+    self.importScripts('js/sw/idb.js');
+}
+
 let restaurant;
 var newMap;
 /**
@@ -139,3 +144,29 @@ const fillBreadcrumb = (restaurant = self.restaurant) => {
   li2.appendChild(a2);
   breadcrumb.appendChild(li2);
 };
+
+
+const saveReview = () => {
+  const name = document.getElementById('reviewer-name').value;
+  const rating = document.getElementById('reviewer-rating').value;
+  const comments = document.getElementById('comments').value;
+
+  console.log(name + rating + comments)
+
+  DBHelper.saveReview(self.restaurant.id, name, rating, comments, (error, review) => {
+    console.log("got save review callback");
+    if (error) {
+      console.log('error saving review');
+    }
+
+    const saveButton = document.getElementById('save-review-button');
+    saveButton.onclick = event => saveReview();
+
+    window.location.href = "/restaurant.html?id=" + self.restaurant.id;
+  });
+}
+
+
+
+
+
