@@ -1,8 +1,3 @@
-
-if (typeof idb === "undefined") {
-    self.importScripts('js/sw/idb.js');
-}
-
 let restaurant;
 var newMap;
 /**
@@ -115,12 +110,16 @@ createReviewHTML = (review) => {
  * Get a parameter by name from page URL.
  */
 getParameterByName = (name, url) => {
+  console.log(name);
   if (!url) url = window.location.href;
   name = name.replace(/[\[\]]/g, '\\$&');
+  console.log(name);
   const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`),
     results = regex.exec(url);
+    console.log(results);
   if (!results) return null;
   if (!results[2]) return '';
+  console.log(decodeURIComponent(results[2].replace(/\+/g, ' ')));
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 };
 /**

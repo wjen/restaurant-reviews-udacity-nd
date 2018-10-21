@@ -2,6 +2,25 @@
  * Common database helper functions.
  */
 
+const dbPromise = idb.open('restaurant-reviews', 1, upgradeDB => {
+  switch (upgradeDB.oldVersion) {
+    case 0:
+      upgradeDB.createObjectStore('restaurants', {
+        keyPath: 'id'
+      });
+    case 1:
+      const reviewsStore = upgradeDB.createObjectStore("reviews", {
+        keyPath: 'id'
+      });
+      reviewsStore.createIndex("restaurant_id", "restaurant_id");
+    case 2:
+      upgradeDB.createObjectStore("pending", {
+        keyPath: "id",
+        autoIncrement: true
+      });
+  }
+});
+
 class DBHelper {
 
   /**
@@ -205,6 +224,24 @@ class DBHelper {
     return marker;
   }
 
+  static addPendingRequestToQueue(url, method, body) {
+    // Open the database ad add the request details to the pending table
+    dbPromise.then(db => {
+      const tx = db.transaction("pending", "readwrite");
+      tx
+        .objectStore("pending")
+        .add({
+          data: {
+            url,
+            method,
+            body
+          }
+        })
+    })
+      .catch(error => { console.log('error adding to request que', error); })
+      .then(DBHelper.nextPending());
+  }
+
   static updateCachedRestaurantReview(id, bodyObj) {
     console.log("updating cache for new review: ", bodyObj);
     // Push the review into the reviews store
@@ -231,7 +268,7 @@ class DBHelper {
   }
 
   static saveReview(id, name, rating, comment, callback) {
-    // Block submits unitl the callback finishes
+    // Block submits until the callback finishes
     const saveButton = document.getElementById('save-review-button');
     saveButton.onclick = null;
 

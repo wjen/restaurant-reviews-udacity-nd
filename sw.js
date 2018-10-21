@@ -1,5 +1,5 @@
 let cacheID = "mws-restaurant-01";
-let dbPromise;
+let dbpromise;
 let urlsToCache = [
   '/',
   '/index.html',
@@ -28,7 +28,6 @@ function createDB() {
         });
         reviewsStore.createIndex("restaurant_id", "restaurant_id");
     }
-
   });
 }
 
