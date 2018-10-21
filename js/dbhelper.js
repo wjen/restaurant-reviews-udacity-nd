@@ -242,6 +242,80 @@ class DBHelper {
       .then(DBHelper.nextPending());
   }
 
+  static nextPending() {
+    DBHelper.attemptCommitPending(DBHelper.nextPending);
+  }
+
+  static attemptCommitPending(callback) {
+    // Iterate over the pending items until there is a network failure
+    let url;
+    let method;
+    let body;
+    //const dbPromise = idb.open("fm-udacity-restaurant");
+    dbPromise.then(db => {
+      if (!db.objectStoreNames.length) {
+        console.log("DB not available");
+        db.close();
+        return;
+      }
+
+      const tx = db.transaction("pending", "readwrite");
+      tx
+        .objectStore("pending")
+        .openCursor()
+        .then(cursor => {
+          if (!cursor) {
+            return;
+          }
+          const value = cursor.value;
+          url = cursor.value.data.url;
+          method = cursor.value.data.method;
+          body = cursor.value.data.body;
+
+          // If we don't have a parameter then we're on a bad record that should be tossed
+          // and then move on
+          if ((!url || !method) || (method === "POST" && !body)) {
+            cursor
+              .delete()
+              .then(callback());
+            return;
+          };
+
+          const properties = {
+            body: JSON.stringify(body),
+            method: method
+          }
+          console.log("sending post from queue: ", properties);
+          fetch(url, properties)
+            .then(response => {
+            // If we don't get a good response then assume we're offline
+            if (!response.ok && !response.redirected) {
+              return;
+            }
+          })
+            .then(() => {
+              // Success! Delete the item from the pending queue
+              const deltx = db.transaction("pending", "readwrite");
+              deltx
+                .objectStore("pending")
+                .openCursor()
+                .then(cursor => {
+                  cursor
+                    .delete()
+                    .then(() => {
+                      callback();
+                    })
+                })
+              console.log("deleted pending item from queue");
+            })
+        })
+        .catch(error => {
+          console.log("Error reading cursor");
+          return;
+        })
+    })
+  }
+
   static updateCachedRestaurantReview(id, bodyObj) {
     console.log("updating cache for new review: ", bodyObj);
     // Push the review into the reviews store
