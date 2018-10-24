@@ -16,7 +16,7 @@ if (typeof idb === "undefined") {
     self.importScripts('js/sw/idb.js');
 }
 function createDB() {
-  idb.open('restaurant-reviews', 1, upgradeDB => {
+  idb.open('restaurant-reviews', 3, upgradeDB => {
     switch (upgradeDB.oldVersion) {
       case 0:
         upgradeDB.createObjectStore('restaurants', {
@@ -27,6 +27,11 @@ function createDB() {
           keyPath: 'id'
         });
         reviewsStore.createIndex("restaurant_id", "restaurant_id");
+      case 2:
+      upgradeDB.createObjectStore("pending", {
+        keyPath: "id",
+        autoIncrement: true
+      });
     }
   });
 }

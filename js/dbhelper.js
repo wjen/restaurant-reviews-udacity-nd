@@ -2,7 +2,7 @@
  * Common database helper functions.
  */
 
-const dbPromise = idb.open('restaurant-reviews', 1, upgradeDB => {
+const dbPromise = idb.open('restaurant-reviews', 3, upgradeDB => {
   switch (upgradeDB.oldVersion) {
     case 0:
       upgradeDB.createObjectStore('restaurants', {
@@ -225,7 +225,8 @@ class DBHelper {
   }
 
   static addPendingRequestToQueue(url, method, body) {
-    // Open the database ad add the request details to the pending table
+    // Open the database and add the request details to the pending table
+    const dbPromise = idb.open("restaurant-reviews");
     dbPromise.then(db => {
       const tx = db.transaction("pending", "readwrite");
       tx
@@ -248,72 +249,77 @@ class DBHelper {
 
   static attemptCommitPending(callback) {
     // Iterate over the pending items until there is a network failure
+    console.log('attemptcommitpending running');
     let url;
     let method;
     let body;
-    //const dbPromise = idb.open("fm-udacity-restaurant");
     dbPromise.then(db => {
       if (!db.objectStoreNames.length) {
         console.log("DB not available");
         db.close();
         return;
       }
-
+      console.log(db);
       const tx = db.transaction("pending", "readwrite");
-      tx
-        .objectStore("pending")
-        .openCursor()
-        .then(cursor => {
-          if (!cursor) {
+      const store = tx.objectStore("pending");
+      store.openCursor()
+      .then( cursor => {
+        if (!cursor) {
+          return;
+        }
+        const value = cursor.value;
+        url = cursor.value.data.url;
+        method = cursor.value.data.method;
+        body = cursor.value.data.body;
+        console.log(url);
+        console.log(method);
+        console.log(body);
+
+        // If we don't have a parameter then we're on a bad record that should be tossed
+        // and then move on
+        if (!url || !method || !body) {
+          cursor
+            .delete()
+            .then(callback());
+          return;
+        };
+
+        const properties = {
+          body: JSON.stringify(body),
+          method: method,
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+
+        console.log("sending post from queue: ", properties);
+        fetch(url, properties)
+          .then(response => {
+          // If we don't get a good response then assume we're offline
+          if (!response.ok && !response.redirected) {
             return;
           }
-          const value = cursor.value;
-          url = cursor.value.data.url;
-          method = cursor.value.data.method;
-          body = cursor.value.data.body;
-
-          // If we don't have a parameter then we're on a bad record that should be tossed
-          // and then move on
-          if ((!url || !method) || (method === "POST" && !body)) {
-            cursor
-              .delete()
-              .then(callback());
-            return;
-          };
-
-          const properties = {
-            body: JSON.stringify(body),
-            method: method
-          }
-          console.log("sending post from queue: ", properties);
-          fetch(url, properties)
-            .then(response => {
-            // If we don't get a good response then assume we're offline
-            if (!response.ok && !response.redirected) {
-              return;
-            }
-          })
-            .then(() => {
-              // Success! Delete the item from the pending queue
-              const deltx = db.transaction("pending", "readwrite");
-              deltx
-                .objectStore("pending")
-                .openCursor()
-                .then(cursor => {
-                  cursor
-                    .delete()
-                    .then(() => {
-                      callback();
-                    })
+        }).then(() => {
+          // Success! Delete the item from the pending queue
+          const deltx = db.transaction("pending", "readwrite");
+          deltx
+            .objectStore("pending")
+            .openCursor()
+            .then(cursor => {
+              cursor
+                .delete()
+                .then(() => {
+                  callback();
                 })
-              console.log("deleted pending item from queue");
             })
+          console.log("deleted pending item from queue");
         })
+      })
         .catch(error => {
           console.log("Error reading cursor");
           return;
         })
-    })
+      })
   }
 
   static updateCachedRestaurantReview(id, bodyObj) {
