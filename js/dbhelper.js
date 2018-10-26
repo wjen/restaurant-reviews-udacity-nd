@@ -40,7 +40,7 @@ class DBHelper {
   /**
    * Fetch all restaurants.
    */
-    static fetchRestaurants(callback, id) {
+  static fetchRestaurants(callback, id) {
     //let xhr = new XMLHttpRequest();
     let fetchURL;
     if (!id) {
@@ -69,6 +69,7 @@ class DBHelper {
     }).catch(error => {
       callback(`Request failed. Returned ${error}`, null);
     });
+  }
 
   /**
    * Fetch a restaurant by its ID.
@@ -79,14 +80,17 @@ class DBHelper {
       if (error) {
         callback(error, null);
       } else {
-        const restaurant = restaurants.find(r => r.id == id);
-        if (restaurant) { // Got the restaurant
+        //const restaurant = restaurants.find(r => r.id == id);
+        const restaurant = restaurants;
+        if (restaurant) {
+          // Got the restaurant
           callback(null, restaurant);
-        } else { // Restaurant does not exist in the database
-          callback('Restaurant does not exist', null);
+        } else {
+          // Restaurant does not exist in the database
+          callback("Restaurant does not exist", null);
         }
       }
-    });
+    }, id);
   }
 
   static fetchRestaurantReviewsById(id, callback) {
