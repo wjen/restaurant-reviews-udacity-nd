@@ -32,6 +32,8 @@ initMap = () => {
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.newMap);
     }
   });
+    DBHelper.nextPending();
+
 };
 
 /**

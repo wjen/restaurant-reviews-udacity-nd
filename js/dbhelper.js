@@ -40,37 +40,35 @@ class DBHelper {
   /**
    * Fetch all restaurants.
    */
-  static fetchRestaurants(callback, id) {
-    // Use Fetch instead of XHR
+    static fetchRestaurants(callback, id) {
+    //let xhr = new XMLHttpRequest();
     let fetchURL;
-    if(!id) {
+    if (!id) {
       fetchURL = DBHelper.DATABASE_URL;
     } else {
-      fetchURL = DBHelper.DATABASE_URL + '/' + id;
+      fetchURL = DBHelper.DATABASE_URL + "/" + id;
     }
-    fetch(fetchURL).then(response => {
-      return response.json();
-    }).then((restaurants) => {
-      console.log("restaurants JSON: ", restaurants);
-      callback(null, restaurants);
-    }).catch((error) => {
-      console.log('error', error);
-    });
+    fetch(fetchURL, {method: "GET"}).then(response => {
+      response
+        .json()
+        .then(restaurants => {
+          if (restaurants.length) {
+            // Get all neighborhoods from all restaurants
+            const neighborhoods = restaurants.map((v, i) => restaurants[i].neighborhood);
+            // Remove duplicates from neighborhoods
+            fetchedNeighborhoods = neighborhoods.filter((v, i) => neighborhoods.indexOf(v) == i);
 
-    // let xhr = new XMLHttpRequest();
-    // xhr.open('GET', DBHelper.DATABASE_URL);
-    // xhr.onload = () => {
-    //   if (xhr.status === 200) { // Got a success response from server!
-    //     const json = JSON.parse(xhr.responseText);
-    //     const restaurants = json.restaurants;
-    //     callback(null, restaurants);
-    //   } else { // Oops!. Got an error from server.
-    //     const error = (`Request failed. Returned status of ${xhr.status}`);
-    //     callback(error, null);
-    //   }
-    // };
-    // xhr.send();
-  }
+            // Get all cuisines from all restaurants
+            const cuisines = restaurants.map((v, i) => restaurants[i].cuisine_type);
+            // Remove duplicates from cuisines
+            fetchedCuisines = cuisines.filter((v, i) => cuisines.indexOf(v) == i);
+          }
+
+          callback(null, restaurants);
+        });
+    }).catch(error => {
+      callback(`Request failed. Returned ${error}`, null);
+    });
 
   /**
    * Fetch a restaurant by its ID.
@@ -249,77 +247,72 @@ class DBHelper {
 
   static attemptCommitPending(callback) {
     // Iterate over the pending items until there is a network failure
-    console.log('attemptcommitpending running');
     let url;
     let method;
     let body;
+    //const dbPromise = idb.open("fm-udacity-restaurant");
     dbPromise.then(db => {
       if (!db.objectStoreNames.length) {
         console.log("DB not available");
         db.close();
         return;
       }
-      console.log(db);
+
       const tx = db.transaction("pending", "readwrite");
-      const store = tx.objectStore("pending");
-      store.openCursor()
-      .then( cursor => {
-        if (!cursor) {
-          return;
-        }
-        const value = cursor.value;
-        url = cursor.value.data.url;
-        method = cursor.value.data.method;
-        body = cursor.value.data.body;
-        console.log(url);
-        console.log(method);
-        console.log(body);
-
-        // If we don't have a parameter then we're on a bad record that should be tossed
-        // and then move on
-        if (!url || !method || !body) {
-          cursor
-            .delete()
-            .then(callback());
-          return;
-        };
-
-        const properties = {
-          body: JSON.stringify(body),
-          method: method,
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-
-        console.log("sending post from queue: ", properties);
-        fetch(url, properties)
-          .then(response => {
-          // If we don't get a good response then assume we're offline
-          if (!response.ok && !response.redirected) {
+      tx
+        .objectStore("pending")
+        .openCursor()
+        .then(cursor => {
+          if (!cursor) {
             return;
           }
-        }).then(() => {
-          // Success! Delete the item from the pending queue
-          const deltx = db.transaction("pending", "readwrite");
-          deltx
-            .objectStore("pending")
-            .openCursor()
-            .then(cursor => {
-              cursor
-                .delete()
-                .then(() => {
-                  callback();
+          const value = cursor.value;
+          url = cursor.value.data.url;
+          method = cursor.value.data.method;
+          body = cursor.value.data.body;
+
+          // If we don't have a parameter then we're on a bad record that should be tossed
+          // and then move on
+          if ((!url || !method) || (method === "POST" && !body)) {
+            cursor
+              .delete()
+              .then(callback());
+            return;
+          };
+
+          const properties = {
+            body: JSON.stringify(body),
+            method: method
+          }
+          console.log("sending post from queue: ", properties);
+          fetch(url, properties)
+            .then(response => {
+            // If we don't get a good response then assume we're offline
+            if (!response.ok && !response.redirected) {
+              return;
+            }
+          })
+            .then(() => {
+              // Success! Delete the item from the pending queue
+              const deltx = db.transaction("pending", "readwrite");
+              deltx
+                .objectStore("pending")
+                .openCursor()
+                .then(cursor => {
+                  cursor
+                    .delete()
+                    .then(() => {
+                      callback();
+                    })
                 })
+              console.log("deleted pending item from queue");
             })
-          console.log("deleted pending item from queue");
         })
-      })
         .catch(error => {
           console.log("Error reading cursor");
           return;
         })
-      })
+    })
   }
 
   static updateCachedRestaurantReview(id, bodyObj) {
@@ -342,8 +335,9 @@ class DBHelper {
   static saveNewReview(id, bodyObj, callback) {
     // Push the request into the waiting queue in IDB
     const url = `${DBHelper.DATABASE_REVIEWS_URL}`;
+    const method = "POST";
     DBHelper.updateCachedRestaurantReview(id, bodyObj);
-    DBHelper.addPendingRequestToQueue(url, "POST", bodyObj);
+    DBHelper.addPendingRequestToQueue(url, method, bodyObj);
     callback(null, null);
   }
 

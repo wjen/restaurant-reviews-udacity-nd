@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
       fillBreadcrumb();
     }
   });
+  DBHelper.nextPending();
+
 });
 
 /**
@@ -161,7 +163,7 @@ const saveReview = () => {
     const saveButton = document.getElementById('save-review-button');
     saveButton.onclick = event => saveReview();
 
-    // window.location.href = "/restaurant.html?id=" + self.restaurant.id;
+    window.location.href = "/restaurant.html?id=" + self.restaurant.id;
   });
 }
 

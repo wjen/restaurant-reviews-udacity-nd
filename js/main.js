@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
   initMap(); // added
   fetchNeighborhoods();
   fetchCuisines();
+  DBHelper.nextPending();
+
 });
 
 /**
@@ -87,6 +89,8 @@ initMap = () => {
   }).addTo(newMap);
 
   updateRestaurants();
+  DBHelper.nextPending();
+
 }
 
 /**
