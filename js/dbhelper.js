@@ -175,8 +175,8 @@ class DBHelper {
         // Get all neighborhoods from all restaurants
         const neighborhoods = restaurants.map((v, i) => restaurants[i].neighborhood)
         // Remove duplicates from neighborhoods
-        const uniqueNeighborhoods = neighborhoods.filter((v, i) => neighborhoods.indexOf(v) == i).sort();
-        callback(null, uniqueNeighborhoods);
+        fetchedNeighborhoods = neighborhoods.filter((v, i) => neighborhoods.indexOf(v) == i).sort();
+        callback(null, fetchedNeighborhoods);
       }
     });
   }
@@ -185,6 +185,10 @@ class DBHelper {
    * Fetch all cuisines with proper error handling.
    */
   static fetchCuisines(callback) {
+    if (fetchedCuisines) {
+      callback(null, fetchedCuisines);
+      return;
+    }
     // Fetch all restaurants
     DBHelper.fetchRestaurants((error, restaurants) => {
       if (error) {
@@ -193,8 +197,8 @@ class DBHelper {
         // Get all cuisines from all restaurants
         const cuisines = restaurants.map((v, i) => restaurants[i].cuisine_type)
         // Remove duplicates from cuisines
-        const uniqueCuisines = cuisines.filter((v, i) => cuisines.indexOf(v) == i).sort();
-        callback(null, uniqueCuisines);
+        fetchedCuisines = cuisines.filter((v, i) => cuisines.indexOf(v) == i).sort();
+        callback(null, fetchedCuisines);
       }
     });
   }
