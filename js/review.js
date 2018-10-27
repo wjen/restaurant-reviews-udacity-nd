@@ -18,14 +18,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
 /**
  * Get current restaurant from page URL.
  */
-fetchRestaurantFromURL = (callback) => {
+const fetchRestaurantFromURL = callback => {
   if (self.restaurant) { // restaurant already fetched!
     callback(null, self.restaurant)
     return;
   }
   const id = getParameterByName('id');
   if (!id) { // no id found in URL
-    error = 'No restaurant id in URL'
+    const error = 'No restaurant id in URL'
     callback(error, null);
   } else {
     DBHelper.fetchRestaurantById(id, (error, restaurant) => {
@@ -82,7 +82,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 /**
  * Create review HTML and add it to the webpage.
  */
-createReviewHTML = (review) => {
+const createReviewHTML = review => {
   const li = document.createElement('li');
   const name = document.createElement('p');
   name.innerHTML = review.name;
@@ -111,17 +111,13 @@ createReviewHTML = (review) => {
 /**
  * Get a parameter by name from page URL.
  */
-getParameterByName = (name, url) => {
-  console.log(name);
+const getParameterByName = (name, url) => {
   if (!url) url = window.location.href;
   name = name.replace(/[\[\]]/g, '\\$&');
-  console.log(name);
   const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`),
     results = regex.exec(url);
-    console.log(results);
   if (!results) return null;
   if (!results[2]) return '';
-  console.log(decodeURIComponent(results[2].replace(/\+/g, ' ')));
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 };
 /**
@@ -135,7 +131,6 @@ const fillBreadcrumb = (restaurant = self.restaurant) => {
   a1.innerHTML = restaurant.name;
   li1.appendChild(a1);
   breadcrumb.appendChild(li1);
-
 
   const li2 = document.createElement("li");
   const a2 = document.createElement("a");

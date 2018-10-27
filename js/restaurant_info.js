@@ -5,7 +5,6 @@ var newMap;
  */
 document.addEventListener('DOMContentLoaded', (event) => {
   initMap();
-  DBHelper.nextPending();
 });
 
 /**
@@ -40,14 +39,15 @@ initMap = () => {
 /**
  * Get current restaurant from page URL.
  */
-fetchRestaurantFromURL = (callback) => {
+fetchRestaurantFromURL = callback => {
   if (self.restaurant) { // restaurant already fetched!
     callback(null, self.restaurant)
     return;
   }
   const id = getParameterByName('id');
-  if (!id) { // no id found in URL
-    error = 'No restaurant id in URL'
+  if (!id) {
+  // no id found in URL
+    const error = 'No restaurant id in URL'
     callback(error, null);
   } else {
     DBHelper.fetchRestaurantById(id, (error, restaurant) => {
@@ -57,7 +57,7 @@ fetchRestaurantFromURL = (callback) => {
         return;
       }
       fillRestaurantHTML();
-      callback(null, restaurant)
+      callback(null, restaurant);
     });
   }
 };
@@ -65,7 +65,7 @@ fetchRestaurantFromURL = (callback) => {
 /**
  * Create restaurant HTML and add it to the webpage
  */
-fillRestaurantHTML = (restaurant = self.restaurant) => {
+const fillRestaurantHTML = (restaurant = self.restaurant) => {
   const main = document.querySelector('.maincontent');
   const isFavorite = (restaurant["is_favorite"] && restaurant["is_favorite"].toString() === "true") ? true : false;
   const favDiv = document.createElement('div');
@@ -108,14 +108,13 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
     fillRestaurantHoursHTML();
   }
   // fill reviews
-  // fillReviewsHTML();
   DBHelper.fetchRestaurantReviewsById(restaurant.id, fillReviewsHTML);
 };
 
 /**
  * Create restaurant operating hours HTML table and add it to the webpage.
  */
-fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => {
+const fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => {
   const hours = document.getElementById('restaurant-hours');
   for (let key in operatingHours) {
     const row = document.createElement('tr');
@@ -135,7 +134,7 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-fillReviewsHTML = (error, reviews) => {
+const fillReviewsHTML = (error, reviews) => {
   if(error) {
     console.log("Error Retrieving Restaraunt Reviews : ", error);
   }
@@ -143,7 +142,7 @@ fillReviewsHTML = (error, reviews) => {
   self.restaurant.reviews = reviews;
   const container = document.getElementById('reviews-container');
   const flex = document.createElement('div');
-  flex.id = ('reviews-header');
+  flex.id = 'reviews-header';
   container.appendChild(flex);
 
   const title = document.createElement('h3');
@@ -171,7 +170,7 @@ fillReviewsHTML = (error, reviews) => {
 /**
  * Create review HTML and add it to the webpage.
  */
-createReviewHTML = (review) => {
+const createReviewHTML = review => {
   const li = document.createElement('li');
   const name = document.createElement('p');
   name.innerHTML = review.name;

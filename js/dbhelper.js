@@ -242,7 +242,7 @@ class DBHelper {
       const tx = db.transaction("pending", "readwrite");
       tx
         .objectStore("pending")
-        .add({
+        .put({
           data: {
             url,
             method,
@@ -250,7 +250,7 @@ class DBHelper {
           }
         })
     })
-      .catch(error => { console.log('error adding to request que', error); })
+      .catch(error => {})
       .then(DBHelper.nextPending());
   }
 
@@ -377,4 +377,6 @@ class DBHelper {
    });
   }
 }
+
+window.DBHelper = DBHelper;
 
