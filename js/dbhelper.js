@@ -1,7 +1,8 @@
 /**
  * Common database helper functions.
  */
-
+let fetchedCuisines;
+let fetchedNeighborhoods;
 const dbPromise = idb.open('restaurant-reviews', 3, upgradeDB => {
   switch (upgradeDB.oldVersion) {
     case 0:
@@ -99,7 +100,6 @@ class DBHelper {
     fetch(fetchURL).then(response => {
       response.json()
         .then(result => {
-          console.log(result);
           callback(null, result);
         })
     }).catch(error => callback(error, null));
@@ -115,7 +115,7 @@ class DBHelper {
         callback(error, null);
       } else {
         // Filter restaurants to have only given cuisine type
-        const results = restaurants.filter(r => r.cuisine_type == cuisine);
+        const results = restaurants.filter(r => r.cuisine_type === cuisine);
         callback(null, results);
       }
     });
@@ -131,7 +131,7 @@ class DBHelper {
         callback(error, null);
       } else {
         // Filter restaurants to have only given neighborhood
-        const results = restaurants.filter(r => r.neighborhood == neighborhood);
+        const results = restaurants.filter(r => r.neighborhood === neighborhood);
         callback(null, results);
       }
     });
@@ -146,8 +146,9 @@ class DBHelper {
       if (error) {
         callback(error, null);
       } else {
-        let results = restaurants
-        if (cuisine != 'all') { // filter by cuisine
+        let results = restaurants;
+        if (cuisine != 'all') {
+        // filter by cuisine
           results = results.filter(r => r.cuisine_type == cuisine);
         }
         if (neighborhood != 'all') { // filter by neighborhood
@@ -162,6 +163,10 @@ class DBHelper {
    * Fetch all neighborhoods with proper error handling.
    */
   static fetchNeighborhoods(callback) {
+    if (fetchedNeighborhoods) {
+      callback(null, fetchedNeighborhoods);
+      return;
+    }
     // Fetch all restaurants
     DBHelper.fetchRestaurants((error, restaurants) => {
       if (error) {
@@ -246,6 +251,7 @@ class DBHelper {
   }
 
   static nextPending() {
+    console.log('hello from next pending');
     DBHelper.attemptCommitPending(DBHelper.nextPending);
   }
 

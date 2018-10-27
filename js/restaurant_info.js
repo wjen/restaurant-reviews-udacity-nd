@@ -5,6 +5,7 @@ var newMap;
  */
 document.addEventListener('DOMContentLoaded', (event) => {
   initMap();
+  DBHelper.nextPending();
 });
 
 /**
