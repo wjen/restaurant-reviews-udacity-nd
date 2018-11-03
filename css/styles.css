@@ -200,7 +200,7 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   text-align: center;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: space-evenly;
 }
 #restaurants-list li {
   background-color: #fff;
@@ -210,7 +210,7 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   min-height: 380px;
   padding: 15px;
   text-align: left;
-  max-width: 300px;
+  min-width: 290px;
 }
 #restaurants-list .restaurant-img {
   background-color: #ccc;
@@ -441,9 +441,9 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   }
 }
 
-@media screen and (min-width: 900px) {
+@media screen and (min-width: 1000px) {
   #restaurants-list li {
-    max-width: 29%;
+    max-width: 30%;
   }
 }
 

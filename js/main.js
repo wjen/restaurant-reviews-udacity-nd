@@ -137,14 +137,9 @@ const fillRestaurantsHTML = (restaurants = self.restaurants) => {
   restaurants.forEach(restaurant => {
     ul.append(createRestaurantHTML(restaurant));
   });
-  if (firstLoad) {
-    fetchNeighborhoods();
-    fetchCuisines();
-
-    firstLoad = false;
-  } else {
-  addMarkersToMap()
-  }
+  fetchNeighborhoods();
+  fetchCuisines();
+  addMarkersToMap();
 }
 
 /**

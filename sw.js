@@ -36,24 +36,6 @@ function createDB() {
   });
 }
 
-
-// const dbPromise = idb.open("fm-udacity-restaurant", 3, upgradeDB => {
-//   switch (upgradeDB.oldVersion) {
-//     case 0:
-//       upgradeDB.createObjectStore("restaurants", {keyPath: "id"});
-//     case 1:
-//       {
-//         const reviewsStore = upgradeDB.createObjectStore("reviews", {keyPath: "id"});
-//         reviewsStore.createIndex("restaurant_id", "restaurant_id");
-//       }
-//     case 2:
-//       upgradeDB.createObjectStore("pending", {
-//         keyPath: "id",
-//         autoIncrement: true
-//       });
-//   }
-// });
-
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(cacheID).then(cache => {
@@ -74,12 +56,32 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   let cacheRequest = event.request;
   let cacheUrlObj = new URL(event.request.url);
+  if (event.request.url.indexOf("restaurant.html") > -1) {
+    const cacheURL = "restaurant.html";
+    cacheRequest = new Request(cacheURL);
+    console.log(cacheRequest);
+  }
+
 
   // Handle AJAX Requests Separately to use indexDB
   const checkURL = new URL(event.request.url);
   if(checkURL.port === '1337') {
     const parts = checkURL.pathname.split("/");
-    const id = parts[parts.length -1] === 'restaurants' ? "-1" : parts[parts.length - 1];
+    let id = checkURL
+      .searchParams
+      .get("restaurant_id");
+    if (!id) {
+      if (checkURL.pathname.indexOf("restaurants")) {
+        id = parts[parts.length - 1] === "restaurants"
+          ? "-1"
+          : parts[parts.length - 1];
+      } else {
+        id = checkURL
+          .searchParams
+          .get("restaurant_id");
+          console.log('this should never show');
+      }
+    }
     handleAJAXEvent(event, id);
   } else {
     handleNonAJAXEvent(event, cacheRequest);
