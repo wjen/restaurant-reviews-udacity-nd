@@ -1,5 +1,5 @@
 let cacheID = "mws-restaurant-01";
-let dbpromise;
+let dbPromise;
 let urlsToCache = [
   '/',
   '/index.html',
@@ -16,7 +16,7 @@ if (typeof idb === "undefined") {
     self.importScripts('js/sw/idb.js');
 }
 function createDB() {
-  idb.open('restaurant-reviews', 3, upgradeDB => {
+  dbPromise = idb.open('restaurant-reviews', 3, upgradeDB => {
     switch (upgradeDB.oldVersion) {
       case 0:
         upgradeDB.createObjectStore('restaurants', {
@@ -69,7 +69,7 @@ self.addEventListener('fetch', event => {
     const parts = checkURL.pathname.split("/");
     let id = checkURL
       .searchParams
-      .get("restaurant_id");
+      .get("restaurant_id") - 0;
     if (!id) {
       if (checkURL.pathname.indexOf("restaurants")) {
         id = parts[parts.length - 1] === "restaurants"
@@ -79,9 +79,9 @@ self.addEventListener('fetch', event => {
         id = checkURL
           .searchParams
           .get("restaurant_id");
-          console.log('this should never show');
       }
     }
+    console.log(id);
     handleAJAXEvent(event, id);
   } else {
     handleNonAJAXEvent(event, cacheRequest);
@@ -93,8 +93,62 @@ const handleAJAXEvent = (event, id) => {
   // has already been stored there. If so, return that.
   // If not, request it from the API, store it, and then
   // return it back.
+
+
+  // Only use caching for GET events
+  if (event.request.method !== "GET") {
+    console.log('hlello');
+    console.log(event.request);
+    return fetch(event.request)
+      .then(fetchResponse => fetchResponse.json())
+      .then(json => {
+        return json
+      });
+  }
+
+  // Split these request for handling restaurants vs reviews
+  if (event.request.url.indexOf("reviews") > -1) {
+    handleReviewsEvent(event, id);
+  } else {
+    handleRestaurantEvent(event, id);
+  }
+}
+
+const handleReviewsEvent = (event, id) => {
+  event.respondWith(dbPromise.then(db => {
+    return db
+      .transaction("reviews")
+      .objectStore("reviews")
+      .index("restaurant_id")
+      .getAll(id);
+  }).then(data => {
+    return (data.length && data) || fetch(event.request)
+      .then(fetchResponse => fetchResponse.json())
+      .then(data => {
+        return dbPromise.then(idb => {
+          const itx = idb.transaction("reviews", "readwrite");
+          const store = itx.objectStore("reviews");
+          data.forEach(review => {
+            store.put({id: review.id, "restaurant_id": review["restaurant_id"], data: review});
+          })
+          return data;
+        })
+      })
+  }).then(finalResponse => {
+    if (finalResponse[0].data) {
+      // Need to transform the data to the proper format
+      const mapResponse = finalResponse.map(review => review.data);
+      return new Response(JSON.stringify(mapResponse));
+    }
+    return new Response(JSON.stringify(finalResponse));
+  }).catch(error => {
+    return new Response("Error fetching data", {status: 500})
+  }))
+}
+
+const handleRestaurantEvent = (event, id) => {
   event.respondWith(
-    idb.open('restaurant-reviews', 1)
+    dbPromise
       .then(db => {
         return db
           .transaction("restaurants")
@@ -107,7 +161,7 @@ const handleAJAXEvent = (event, id) => {
           fetch(event.request)
             .then(fetchResponse => fetchResponse.json())
             .then(json => {
-              return idb.open('restaurant-reviews', 1).then(db => {
+              return dbPromise.then(db => {
                 const tx = db.transaction("restaurants", "readwrite");
                 tx.objectStore("restaurants").put({
                   id: id,
@@ -130,12 +184,13 @@ const handleAJAXEvent = (event, id) => {
 const handleNonAJAXEvent = (event, cacheRequest) => {
   event.respondWith(
     caches.match(cacheRequest).then(response => {
+      console.log(response);
       return (
         response || fetch(event.request)
         .then(fetchResponse => {
+          console.log(fetchResponse);
           return caches.open(cacheID).then(cache => {
             cache.put(event.request, fetchResponse.clone());
-            console.log(fetchResponse);
             return fetchResponse;
           });
         }).catch(error => {

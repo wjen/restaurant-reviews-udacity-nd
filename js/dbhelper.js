@@ -284,6 +284,7 @@ class DBHelper {
           const value = cursor.value;
           url = cursor.value.data.url;
           method = cursor.value.data.method;
+          console.log(method);
           body = cursor.value.data.body;
 
           // If we don't have a parameter then we're on a bad record that should be tossed
