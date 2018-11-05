@@ -250,6 +250,7 @@ class DBHelper {
             body
           }
         })
+        console.log('4 added object to pending store');
     })
       .catch(error => {})
       .then(DBHelper.nextPending());
@@ -265,8 +266,8 @@ class DBHelper {
     let url;
     let method;
     let body;
-    //const dbPromise = idb.open("fm-udacity-restaurant");
     dbPromise.then(db => {
+      console.log(db);
       if (!db.objectStoreNames.length) {
         console.log("DB not available");
         db.close();
@@ -278,6 +279,7 @@ class DBHelper {
         .objectStore("pending")
         .openCursor()
         .then(cursor => {
+          console.log(cursor);
           if (!cursor) {
             return;
           }
@@ -293,7 +295,7 @@ class DBHelper {
             cursor
               .delete()
               .then(callback());
-            return;
+              return;
           };
 
           const properties = {
@@ -332,18 +334,18 @@ class DBHelper {
   }
 
   static updateCachedRestaurantReview(id, bodyObj) {
-    console.log("updating cache for new review: ", bodyObj);
+    console.log("1 updating cache for new review: ", bodyObj);
     // Push the review into the reviews store
     dbPromise.then(db => {
       const tx = db.transaction("reviews", "readwrite");
       const store = tx.objectStore("reviews");
-      console.log("putting cached review into store");
+      console.log("2 putting cached review into store");
       store.put({
         id: Date.now(),
-        "restaurant_id": id,
+        restaurant_id: id,
         data: bodyObj
       });
-      console.log("successfully put cached review into store");
+      console.log(" 3 successfully put cached review into store");
       return tx.complete;
     })
   }
@@ -373,8 +375,10 @@ class DBHelper {
     DBHelper.saveNewReview(id, body, (error, result) => {
       if (error) {
         callback(error, null);
+        console.log('error from savenewreview function');
         return;
       }
+      console.log('no error from savenewreview');
       callback(null, result);
    });
   }

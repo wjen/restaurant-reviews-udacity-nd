@@ -70,18 +70,19 @@ self.addEventListener('fetch', event => {
     let id = checkURL
       .searchParams
       .get("restaurant_id") - 0;
+      console.log(id);
     if (!id) {
       if (checkURL.pathname.indexOf("restaurants")) {
         id = parts[parts.length - 1] === "restaurants"
           ? "-1"
           : parts[parts.length - 1];
+        console.log(id);
       } else {
         id = checkURL
           .searchParams
           .get("restaurant_id");
       }
     }
-    console.log(id);
     handleAJAXEvent(event, id);
   } else {
     handleNonAJAXEvent(event, cacheRequest);
@@ -97,7 +98,7 @@ const handleAJAXEvent = (event, id) => {
 
   // Only use caching for GET events
   if (event.request.method !== "GET") {
-    console.log('hlello');
+    console.log('not a get request going off');
     console.log(event.request);
     return fetch(event.request)
       .then(fetchResponse => fetchResponse.json())

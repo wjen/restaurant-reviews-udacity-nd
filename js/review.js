@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
       fillBreadcrumb();
     }
   });
-  DBHelper.nextPending();
+  // DBHelper.nextPending();
 
 });
 
@@ -151,15 +151,15 @@ const saveReview = () => {
   console.log(name + rating + comments)
 
   DBHelper.saveReview(self.restaurant.id, name, rating, comments, (error, review) => {
-    console.log("got save review callback");
     if (error) {
       console.log('error saving review');
     }
+    console.log("got save review callback");
 
     const saveButton = document.getElementById('save-review-button');
     saveButton.onclick = event => saveReview();
 
-    window.location.href = "/restaurant.html?id=" + self.restaurant.id;
+    // window.location.href = "/restaurant.html?id=" + self.restaurant.id;
   });
 }
 
