@@ -239,7 +239,7 @@ class DBHelper {
   static addPendingRequestToQueue(url, method, body) {
     // Open the database and add the request details to the pending table
     const dbPromise = idb.open("restaurant-reviews");
-    dbPromise.then(db => {
+    return dbPromise.then(db => {
       const tx = db.transaction("pending", "readwrite");
       tx
         .objectStore("pending")
@@ -250,15 +250,16 @@ class DBHelper {
             body
           }
         })
-        console.log('4 added object to pending store');
+      return tx.complete
     })
       .catch(error => {})
-      .then(DBHelper.nextPending());
+      .then(()=>DBHelper.nextPending());
+
   }
 
   static nextPending() {
     console.log('hello from next pending');
-    DBHelper.attemptCommitPending(DBHelper.nextPending);
+    return DBHelper.attemptCommitPending(DBHelper.nextPending);
   }
 
   static attemptCommitPending(callback) {
@@ -266,7 +267,7 @@ class DBHelper {
     let url;
     let method;
     let body;
-    dbPromise.then(db => {
+    return dbPromise.then(db => {
       console.log(db);
       if (!db.objectStoreNames.length) {
         console.log("DB not available");
@@ -275,7 +276,7 @@ class DBHelper {
       }
 
       const tx = db.transaction("pending", "readwrite");
-      tx
+      return tx
         .objectStore("pending")
         .openCursor()
         .then(cursor => {
@@ -300,35 +301,36 @@ class DBHelper {
 
           const properties = {
             body: JSON.stringify(body),
-            method: method
+            method: method,
+            headers: {"Content-type": "application/json"}
           }
           console.log("sending post from queue: ", properties);
-          fetch(url, properties)
+          console.log(url, properties);
+          return fetch(url, properties)
             .then(response => {
             // If we don't get a good response then assume we're offline
-            if (!response.ok && !response.redirected) {
-              return;
-            }
-          })
-            .then(() => {
+              if (!response.ok && !response.redirected) {
+                return;
+              }
+              console.log('response');
+              console.log('successful post');
               // Success! Delete the item from the pending queue
               const deltx = db.transaction("pending", "readwrite");
-              deltx
+              return deltx
                 .objectStore("pending")
                 .openCursor()
                 .then(cursor => {
                   cursor
                     .delete()
                     .then(() => {
+                      console.log("deleted pending item from queue");
                       callback();
                     })
                 })
-              console.log("deleted pending item from queue");
             })
         })
         .catch(error => {
-          console.log("Error reading cursor");
-          return;
+          console.log(error);
         })
     })
   }
@@ -355,8 +357,8 @@ class DBHelper {
     const url = `${DBHelper.DATABASE_REVIEWS_URL}`;
     const method = "POST";
     DBHelper.updateCachedRestaurantReview(id, bodyObj);
-    DBHelper.addPendingRequestToQueue(url, method, bodyObj);
-    callback(null, null);
+    return DBHelper.addPendingRequestToQueue(url, method, bodyObj).then(() => callback(null, null));
+
   }
 
   static saveReview(id, name, rating, comment, callback) {
@@ -375,12 +377,10 @@ class DBHelper {
     DBHelper.saveNewReview(id, body, (error, result) => {
       if (error) {
         callback(error, null);
-        console.log('error from savenewreview function');
         return;
       }
-      console.log('no error from savenewreview');
       callback(null, result);
-   });
+    })
   }
 }
 
