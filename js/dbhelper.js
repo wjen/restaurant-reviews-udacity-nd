@@ -320,7 +320,7 @@ class DBHelper {
                 .objectStore("pending")
                 .openCursor()
                 .then(cursor => {
-                  cursor
+                  return cursor
                     .delete()
                     .then(() => {
                       console.log("deleted pending item from queue");
