@@ -338,7 +338,7 @@ class DBHelper {
   static updateCachedRestaurantReview(id, bodyObj) {
     console.log("1 updating cache for new review: ", bodyObj);
     // Push the review into the reviews store
-    dbPromise.then(db => {
+    return dbPromise.then(db => {
       const tx = db.transaction("reviews", "readwrite");
       const store = tx.objectStore("reviews");
       console.log("2 putting cached review into store");
