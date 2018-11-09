@@ -268,7 +268,6 @@ class DBHelper {
     let method;
     let body;
     return dbPromise.then(db => {
-      console.log(db);
       if (!db.objectStoreNames.length) {
         console.log("DB not available");
         db.close();
@@ -280,14 +279,12 @@ class DBHelper {
         .objectStore("pending")
         .openCursor()
         .then(cursor => {
-          console.log(cursor);
           if (!cursor) {
             return;
           }
           const value = cursor.value;
           url = cursor.value.data.url;
           method = cursor.value.data.method;
-          console.log(method);
           body = cursor.value.data.body;
 
           // If we don't have a parameter then we're on a bad record that should be tossed
@@ -296,24 +293,23 @@ class DBHelper {
             cursor
               .delete()
               .then(callback());
-              return;
+            return;
           };
 
           const properties = {
             body: JSON.stringify(body),
-            method: method,
-            headers: {"Content-type": "application/json"}
+            method: method
           }
           console.log("sending post from queue: ", properties);
-          console.log(url, properties);
           return fetch(url, properties)
             .then(response => {
             // If we don't get a good response then assume we're offline
-              if (!response.ok && !response.redirected) {
-                return;
-              }
-              console.log('response');
-              console.log('successful post');
+            if (!response.ok && !response.redirected) {
+              console.log('did not get good response: offline');
+              return;
+            }
+          })
+            .then(() => {
               // Success! Delete the item from the pending queue
               const deltx = db.transaction("pending", "readwrite");
               return deltx
@@ -330,7 +326,8 @@ class DBHelper {
             })
         })
         .catch(error => {
-          console.log(error);
+          console.log("Error reading cursor");
+          return;
         })
     })
   }

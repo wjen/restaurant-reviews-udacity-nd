@@ -9,7 +9,8 @@ let urlsToCache = [
   '/js/main.js',
   '/js/restaurant_info.js',
   '/js/sw/register.js',
-  '/js/sw/idb.js'
+  '/js/sw/idb.js',
+  '/js/review.js'
 ];
 
 if (typeof idb === "undefined") {
@@ -98,20 +99,22 @@ const handleAJAXEvent = (event, id) => {
 
   // Only use caching for GET events
   if (event.request.method !== "GET") {
-    console.log('not a get request going off');
-    console.log(event.request);
-    return fetch(event.request)
-      .then(fetchResponse => fetchResponse.json())
-      .then(json => {
-        return json
-      });
-  }
+    return event.respondWith(
+      fetch(event.request)
+        .then(fetchResponse => {
+          console.log('successfully posted from service worker');
+          return fetchResponse;
+        })
+    );
+  };
 
   // Split these request for handling restaurants vs reviews
   if (event.request.url.indexOf("reviews") > -1) {
     handleReviewsEvent(event, id);
+    console.log('reviews get event');
   } else {
     handleRestaurantEvent(event, id);
+    console.log('restaurant get event');
   }
 }
 
