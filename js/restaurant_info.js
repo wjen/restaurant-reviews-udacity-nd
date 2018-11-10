@@ -77,7 +77,7 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
     : 'url("/img/icons/heart-regular.svg") no-repeat';
   favButton.innerHTML = isFavorite
     ? "restaurant.name" + " is favorited"
-    : "restaurant.name" + " is not favorite";
+    : "restaurant.name" + " is not a favorite";
   favButton.id = "favorite-icon-" + restaurant.id;
   favButton.onclick = event => handleFavoriteClick(restaurant.id, !isFavorite);
   favDiv.append(favButton)
@@ -109,6 +109,14 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
   }
   // fill reviews
   DBHelper.fetchRestaurantReviewsById(restaurant.id, fillReviewsHTML);
+};
+
+const handleFavoriteClick = (id, newState) => {
+  // Update properties of the restaurant data object
+  const favorite = document.getElementById("favorite-icon-" + id);
+  self.restaurant["is_favorite"] = newState;
+  DBHelper.handleFavoriteClick(id, newState);
+  // favButton.onclick = event => handleFavoriteClick(restaurant.id, !self.restaurant["is_favorite"]);
 };
 
 /**
@@ -222,3 +230,5 @@ getParameterByName = (name, url) => {
   if (!results[2]) return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 };
+
+

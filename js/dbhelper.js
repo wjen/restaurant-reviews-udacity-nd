@@ -300,6 +300,7 @@ class DBHelper {
             body: JSON.stringify(body),
             method: method
           }
+
           console.log("sending post from queue: ", properties);
           return fetch(url, properties)
             .then(response => {
@@ -378,6 +379,115 @@ class DBHelper {
       }
       callback(null, result);
     })
+  }
+
+  static updateCachedRestaurantData(id, updateObj) {
+    const dbPromise = idb.open("restaurant-reviews");
+    // Update in the data for all restaurants first
+    dbPromise.then(db => {
+      console.log("Getting db transaction");
+      const tx = db.transaction("restaurants", "readwrite");
+      const value = tx
+        .objectStore("restaurants")
+        .get("-1")
+        .then(value => {
+          if (!value) {
+            console.log("No cached data found");
+            return;
+          }
+          const data = value.data;
+          console.log(data);
+          const restaurantArr = data.filter(r => r.id === id);
+          console.log(restaurantArr);
+          console.log(restaurantArr[0]);
+          const restaurantObj = restaurantArr[0];
+          // Update restaurantObj with updateObj details
+          if (!restaurantObj)
+            return;
+          const keys = Object.keys(updateObj);
+          keys.forEach(k => {
+            restaurantObj[k] = updateObj[k];
+          })
+
+          // Put the data back in IDB storage
+          dbPromise.then(db => {
+            const tx = db.transaction("restaurants", "readwrite");
+            tx
+              .objectStore("restaurants")
+              .put({id: "-1", data: data});
+            return tx.complete;
+          })
+        })
+    })
+
+    // Update the restaurant specific data
+    dbPromise.then(db => {
+      console.log("Getting db transaction");
+      const tx = db.transaction("restaurants", "readwrite");
+      const value = tx
+        .objectStore("restaurants")
+        .get(id + "")
+        .then(value => {
+          if (!value) {
+            console.log("No cached data found");
+            return;
+          }
+          const restaurantObj = value.data;
+          console.log("Specific restaurant obj: ", restaurantObj);
+          // Update restaurantObj with updateObj details
+          if (!restaurantObj)
+            return;
+          const keys = Object.keys(updateObj);
+          keys.forEach(k => {
+            restaurantObj[k] = updateObj[k];
+          })
+
+          // Put the data back in IDB storage
+          dbPromise.then(db => {
+            const tx = db.transaction("restaurants", "readwrite");
+            tx
+              .objectStore("restaurants")
+              .put({
+                id: id + "",
+                data: restaurantObj
+              });
+            return tx.complete;
+          })
+        })
+    })
+  }
+
+  static updateFavorite(id, newState, callback) {
+    // Push the request into the waiting queue in IDB
+    const url = `${DBHelper.DATABASE_URL}/${id}/?is_favorite=${newState}`;
+    const method = "PUT";
+    DBHelper.updateCachedRestaurantData(id, {"is_favorite": newState});
+    // DBHelper.addPendingRequestToQueue(url, method);
+
+    // Update the favorite data on the selected ID in the cached data
+
+    callback(null, {id, value: newState});
+  }
+
+  static handleFavoriteClick(id, newState) {
+    // Block any more clicks on this until the callback
+    const fav = document.getElementById("favorite-icon-" + id);
+    fav.onclick = null;
+
+    DBHelper.updateFavorite(id, newState, (error, resultObj) => {
+      if (error) {
+        console.log("Error updating favorite");
+        return;
+      }
+      // Update the button background for the specified favorite
+      const favButton = document.getElementById("favorite-icon-" + resultObj.id);
+      favButton.style.background = resultObj.value
+        ? 'url("/img/icons/heart-solid.svg") no-repeat'
+        : 'url("/img/icons/heart-regular.svg") no-repeat';
+
+      favButton.onclick = event => handleFavoriteClick(self.restaurant.id, !self.restaurant["is_favorite"]);
+
+    });
   }
 }
 
