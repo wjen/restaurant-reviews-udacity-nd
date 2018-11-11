@@ -99,6 +99,9 @@ class DBHelper {
     // Fetch all reviews for the specific restaurant
     const fetchURL = DBHelper.DATABASE_REVIEWS_URL + "/?restaurant_id=" + id;
     fetch(fetchURL).then(response => {
+      if (!response.clone().ok && !response.clone().redirected) {
+        throw "No reviews available";
+      }
       response.json()
         .then(result => {
           callback(null, result);
@@ -258,7 +261,6 @@ class DBHelper {
   }
 
   static nextPending() {
-    console.log('hello from next pending');
     return DBHelper.attemptCommitPending(DBHelper.nextPending);
   }
 
@@ -333,54 +335,6 @@ class DBHelper {
     })
   }
 
-  static updateCachedRestaurantReview(id, bodyObj) {
-    console.log("1 updating cache for new review: ", bodyObj);
-    // Push the review into the reviews store
-    return dbPromise.then(db => {
-      const tx = db.transaction("reviews", "readwrite");
-      const store = tx.objectStore("reviews");
-      console.log("2 putting cached review into store");
-      store.put({
-        id: Date.now(),
-        restaurant_id: id,
-        data: bodyObj
-      });
-      console.log(" 3 successfully put cached review into store");
-      return tx.complete;
-    })
-  }
-
-  static saveNewReview(id, bodyObj, callback) {
-    // Push the request into the waiting queue in IDB
-    const url = `${DBHelper.DATABASE_REVIEWS_URL}`;
-    const method = "POST";
-    DBHelper.updateCachedRestaurantReview(id, bodyObj);
-    return DBHelper.addPendingRequestToQueue(url, method, bodyObj).then(() => callback(null, null));
-
-  }
-
-  static saveReview(id, name, rating, comment, callback) {
-    // Block submits until the callback finishes
-    const saveButton = document.getElementById('save-review-button');
-    saveButton.onclick = null;
-
-    const body = {
-      restaurant_id: id,
-      name: name,
-      rating: rating,
-      comments: comment,
-      createdAt: Date.now()
-    };
-
-    DBHelper.saveNewReview(id, body, (error, result) => {
-      if (error) {
-        callback(error, null);
-        return;
-      }
-      callback(null, result);
-    })
-  }
-
   static updateCachedRestaurantData(id, updateObj) {
     const dbPromise = idb.open("restaurant-reviews");
     // Update in the data for all restaurants first
@@ -396,10 +350,7 @@ class DBHelper {
             return;
           }
           const data = value.data;
-          console.log(data);
           const restaurantArr = data.filter(r => r.id === id);
-          console.log(restaurantArr);
-          console.log(restaurantArr[0]);
           const restaurantObj = restaurantArr[0];
           // Update restaurantObj with updateObj details
           if (!restaurantObj)
@@ -462,33 +413,77 @@ class DBHelper {
     const url = `${DBHelper.DATABASE_URL}/${id}/?is_favorite=${newState}`;
     const method = "PUT";
     DBHelper.updateCachedRestaurantData(id, {"is_favorite": newState});
-    // DBHelper.addPendingRequestToQueue(url, method);
+    DBHelper.addPendingRequestToQueue(url, method);
 
     // Update the favorite data on the selected ID in the cached data
 
     callback(null, {id, value: newState});
   }
 
+  static updateCachedRestaurantReview(id, bodyObj) {
+    // Push the review into the reviews store
+    return dbPromise.then(db => {
+      const tx = db.transaction("reviews", "readwrite");
+      const store = tx.objectStore("reviews");
+      store.put({
+        id: Date.now(),
+        restaurant_id: id,
+        data: bodyObj
+      });
+      return tx.complete;
+    })
+  }
+
+  static saveNewReview(id, bodyObj, callback) {
+    // Push the request into the waiting queue in IDB
+    const url = `${DBHelper.DATABASE_REVIEWS_URL}`;
+    const method = "POST";
+    DBHelper.updateCachedRestaurantReview(id, bodyObj);
+    return DBHelper.addPendingRequestToQueue(url, method, bodyObj).then(() => callback(null, null));
+
+  }
+
   static handleFavoriteClick(id, newState) {
     // Block any more clicks on this until the callback
-    const fav = document.getElementById("favorite-icon-" + id);
-    fav.onclick = null;
+    const favButton = document.getElementById("favorite-icon-" + id);
+    favButton.onclick = null;
 
     DBHelper.updateFavorite(id, newState, (error, resultObj) => {
       if (error) {
         console.log("Error updating favorite");
         return;
       }
+      console.log(resultObj);
       // Update the button background for the specified favorite
       const favButton = document.getElementById("favorite-icon-" + resultObj.id);
       favButton.style.background = resultObj.value
         ? 'url("/img/icons/heart-solid.svg") no-repeat'
         : 'url("/img/icons/heart-regular.svg") no-repeat';
-
-      favButton.onclick = event => handleFavoriteClick(self.restaurant.id, !self.restaurant["is_favorite"]);
-
     });
   }
+
+  static saveReview(id, name, rating, comment, callback) {
+    // Block submits until the callback finishes
+    const saveButton = document.getElementById('save-review-button');
+    saveButton.onclick = null;
+
+    const body = {
+      restaurant_id: id,
+      name: name,
+      rating: rating,
+      comments: comment,
+      createdAt: Date.now()
+    };
+
+    DBHelper.saveNewReview(id, body, (error, result) => {
+      if (error) {
+        callback(error, null);
+        return;
+      }
+      callback(null, result);
+    })
+  }
+
 }
 
 window.DBHelper = DBHelper;

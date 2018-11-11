@@ -145,7 +145,7 @@ const fillRestaurantsHTML = (restaurants = self.restaurants) => {
 /**
  * Create restaurant HTML.
  */
-const createRestaurantHTML = (restaurant) => {
+const createRestaurantHTML = restaurant => {
   const li = document.createElement('li');
 
   const image = document.createElement('img');
@@ -210,10 +210,7 @@ const createRestaurantHTML = (restaurant) => {
 
     if (!restaurant)
       return;
-    console.log("before press is " + isFavorite);
-    console.log(newState);
     restaurant["is_favorite"] = newState;
-    console.log("after press is " + restaurant["is_favorite"]);
     // favButton.onclick = event => handleFavoriteClick(restaurant.id, !restaurant["is_favorite"]);
     DBHelper.handleFavoriteClick(id, newState);
   };

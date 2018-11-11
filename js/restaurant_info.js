@@ -28,7 +28,6 @@ initMap = () => {
           'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         id: 'mapbox.streets'
       }).addTo(newMap);
-      fillBreadcrumb();
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.newMap);
     }
   });
@@ -39,7 +38,7 @@ initMap = () => {
 /**
  * Get current restaurant from page URL.
  */
-fetchRestaurantFromURL = callback => {
+const fetchRestaurantFromURL = callback => {
   if (self.restaurant) { // restaurant already fetched!
     callback(null, self.restaurant)
     return;
@@ -56,6 +55,7 @@ fetchRestaurantFromURL = callback => {
         console.error(error);
         return;
       }
+      fillBreadcrumb();
       fillRestaurantHTML();
       callback(null, restaurant);
     });
@@ -80,7 +80,7 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
     : "restaurant.name" + " is not a favorite";
   favButton.id = "favorite-icon-" + restaurant.id;
   favButton.onclick = event => handleFavoriteClick(restaurant.id, !isFavorite);
-  favDiv.append(favButton)
+  favDiv.append(favButton);
   main.append(favDiv);
 
   const name = document.getElementById('restaurant-name');
@@ -111,18 +111,11 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
   DBHelper.fetchRestaurantReviewsById(restaurant.id, fillReviewsHTML);
 };
 
-const handleFavoriteClick = (id, newState) => {
-  // Update properties of the restaurant data object
-  const favorite = document.getElementById("favorite-icon-" + id);
-  self.restaurant["is_favorite"] = newState;
-  DBHelper.handleFavoriteClick(id, newState);
-  // favButton.onclick = event => handleFavoriteClick(restaurant.id, !self.restaurant["is_favorite"]);
-};
-
 /**
  * Create restaurant operating hours HTML table and add it to the webpage.
  */
 const fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => {
+  console.log(restaurant);
   const hours = document.getElementById('restaurant-hours');
   for (let key in operatingHours) {
     const row = document.createElement('tr');
@@ -207,7 +200,7 @@ const createReviewHTML = review => {
 /**
  * Add restaurant name to the breadcrumb navigation menu
  */
-fillBreadcrumb = (restaurant=self.restaurant) => {
+ const fillBreadcrumb = (restaurant = self.restaurant) => {
   const breadcrumb = document.getElementById('breadcrumb');
   const li = document.createElement('li');
   const a = document.createElement('a');
@@ -221,7 +214,7 @@ fillBreadcrumb = (restaurant=self.restaurant) => {
 /**
  * Get a parameter by name from page URL.
  */
-getParameterByName = (name, url) => {
+const getParameterByName = (name, url) => {
   if (!url) url = window.location.href;
   name = name.replace(/[\[\]]/g, '\\$&');
   const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`),
@@ -231,4 +224,12 @@ getParameterByName = (name, url) => {
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 };
 
+const handleFavoriteClick = (id, newState) => {
+  // Update properties of the restaurant data object
+  const favButton = document.getElementById("favorite-icon-" + id);
+  self.restaurant["is_favorite"] = newState;
+
+  DBHelper.handleFavoriteClick(id, newState);
+  favButton.onclick = event => handleFavoriteClick(self.restaurant.id, !self.restaurant["is_favorite"]);
+};
 
