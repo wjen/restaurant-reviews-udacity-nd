@@ -81,35 +81,6 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 };
 
 /**
- * Create review HTML and add it to the webpage.
- */
-const createReviewHTML = review => {
-  const li = document.createElement('li');
-  const name = document.createElement('p');
-  name.innerHTML = review.name;
-  name.classList.add('reviewer-name');
-  li.appendChild(name);
-
-  const date = document.createElement('p');
-  const createdTime = review.createdAt;
-  date.innerHTML = new Date(createdTime).toLocaleString();
-  date.classList.add('review-date');
-  li.appendChild(date);
-
-  const rating = document.createElement('p');
-  rating.innerHTML = `Rating: ${review.rating}`;
-  rating.classList.add('review-rating');
-  li.appendChild(rating);
-
-  const comments = document.createElement('p');
-  comments.innerHTML = review.comments;
-  comments.classList.add('review-comments');
-  li.appendChild(comments);
-
-  return li;
-};
-
-/**
  * Get a parameter by name from page URL.
  */
 const getParameterByName = (name, url) => {
