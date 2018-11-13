@@ -304,14 +304,18 @@ class DBHelper {
           }
 
           console.log("sending post from queue: ", properties);
-          return fetch(url, properties)
+          return fetch(url, properties).catch(e => {
+           console.log({error: e, review: review})
+         })
             .then(response => {
             // If we don't get a good response then assume we're offline
             if (!response.ok && !response.redirected) {
               console.log('did not get good response: offline');
               return;
             }
-          })
+          }).catch(e => {
+           console.log({error: e, review: review})
+         })
             .then(() => {
               // Success! Delete the item from the pending queue
               const deltx = db.transaction("pending", "readwrite");
