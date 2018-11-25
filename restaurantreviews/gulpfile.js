@@ -1,19 +1,18 @@
-// generated on 2018-11-23 using generator-webapp 3.0.1
-const gulp = require('gulp');
-const gulpLoadPlugins = require('gulp-load-plugins');
-const babelify = require('babelify');
-const browserify = require('browserify');
-const browserSync = require('browser-sync').create();
-const concat = require("gulp-concat");
-const del = require('del');
-const wiredep = require('wiredep').stream;
-const runSequence = require('run-sequence');
+// generated on 2018-05-01 using generator-webapp 3.0.1
+const gulp = require("gulp");
+const gulpLoadPlugins = require("gulp-load-plugins");
+const browserify = require("browserify");
+const babelify = require("babelify");
 const source = require("vinyl-source-stream");
+const browserSync = require("browser-sync").create();
+const del = require("del");
+const concat = require("gulp-concat");
+const wiredep = require("wiredep").stream;
+const runSequence = require("run-sequence");
 const inject = require("gulp-inject");
 var fs = require("fs");
 var replace = require("gulp-replace");
 var minify = require("gulp-minify");
-
 
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
@@ -68,7 +67,6 @@ gulp.task("dbhelper", () => {
     .pipe(source("dbhelper.js"))
     .pipe(gulp.dest(".tmp/js/"));
 });
-
 
 function lint(files) {
   return gulp
