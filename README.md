@@ -17,9 +17,6 @@ Thre Restaurant Reviews Project is a three stage Udacity review project. Given a
 
 ![restaurant-review-app](RR-screenshot.png)
 
-![Completion Certificate](ud-fend-cert.png)
-
-
 ### Quick Start Guide
 1. In this folder, start up a simple HTTP server to serve up the site files on your local computer. Python has some simple tools to do this, and you don't even need to know Python. For most people, it's already installed on your computer.
 2. In a terminal, check the version of Python you have: python -V. If you have Python 2.x, spin up the server with python -m SimpleHTTPServer 8000 (or some other port, if port 8000 is already in use.) For Python 3.x, you can use python3 -m http.server 8000. If you don't have Python installed, navigate to Python's website to download and install the software.
@@ -42,5 +39,8 @@ Please make sure you have these installed before proceeding forward.
 	debug: Port        : 1337
 
 
+
+
+![Completion Certificate](ud-fend-cert.png)
 
 
