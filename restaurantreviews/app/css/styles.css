@@ -146,6 +146,7 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   height: 400px;
   width: 100%;
   background-color: #ccc;
+  overflow: hidden;
 }
 
 .aria-map-description {
