@@ -1,3 +1,4 @@
+import idb from "idb";
 /**
  * Common database helper functions.
  */
@@ -461,8 +462,8 @@ class DBHelper {
       // Update the button background for the specified favorite
       const favButton = document.getElementById("favorite-icon-" + resultObj.id);
       favButton.style.background = resultObj.value
-        ? 'url("/img/icons/heart-solid.svg") no-repeat'
-        : 'url("/img/icons/heart-regular.svg") no-repeat';
+        ? 'url("icons/heart-solid.svg") no-repeat'
+        : 'url("icons/heart-regular.svg") no-repeat';
     });
   }
 

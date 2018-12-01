@@ -1,60 +1,58 @@
-let cacheID = "mws-restaurant-01";
+import idb from "idb";
+
 let dbPromise;
+let cacheID = "mws-restaurant-01";
 let urlsToCache = [
-  '/',
-  '/index.html',
-  '/restaurant.html',
-  '/css/styles.css',
-  '/js/dbhelper.js',
-  '/js/main.js',
-  '/js/restaurant_info.js',
-  '/js/sw/register.js',
-  '/js/sw/idb.js',
-  '/js/review.js'
+  "/",
+  "/index.html",
+  "/restaurant.html",
+  "/create-review.html",
+  "/css/styles.css",
+  "/js/dbhelper.js",
+  "/js/main.js",
+  "/js/restaurant_info.js",
+  "/js/sw/register.js",
+  "/js/review.js"
 ];
 
-if (typeof idb === "undefined") {
-    self.importScripts('js/sw/idb.js');
-}
-function createDB() {
-  dbPromise = idb.open('restaurant-reviews', 3, upgradeDB => {
+// if (typeof idb === "undefined") {
+//     self.importScripts("js/sw/idb.js");
+// }
+
+const createDb = () => {
+  dbPromise = idb.open("restaurant-reviews", 3, upgradeDB => {
     switch (upgradeDB.oldVersion) {
       case 0:
-        upgradeDB.createObjectStore('restaurants', {
-          keyPath: 'id'
-        });
+        upgradeDB.createObjectStore("restaurants", {keyPath: "id"});
       case 1:
-        const reviewsStore = upgradeDB.createObjectStore("reviews", {
-          keyPath: 'id'
-        });
-        reviewsStore.createIndex("restaurant_id", "restaurant_id");
+          const reviewsStore = upgradeDB.createObjectStore("reviews", {keyPath: "id"});
+          reviewsStore.createIndex("restaurant_id", "restaurant_id");
       case 2:
-      upgradeDB.createObjectStore("pending", {
-        keyPath: "id",
-        autoIncrement: true
-      });
+        upgradeDB.createObjectStore("pending", {
+          keyPath: "id",
+          autoIncrement: true
+        });
     }
   });
 }
 
-self.addEventListener('install', event => {
+self.addEventListener("install", event => {
+  event.waitUntil(caches.open(cacheID).then(cache => {
+    return cache
+      .addAll(urlsToCache)
+      .catch(error => {
+        console.log("Caches open failed: " + error);
+      });
+  }));
+});
+
+self.addEventListener("activate", event => {
   event.waitUntil(
-    caches.open(cacheID).then(cache => {
-      return cache
-        .addAll(urlsToCache)
-    }).catch(error => {
-        console.log("Caches open failed " + error);
-    })
+    createDb()
   );
 });
 
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    createDB()
-  );
-});
-
-self.addEventListener('fetch', event => {
+self.addEventListener("fetch", event => {
   let cacheRequest = event.request;
   let cacheUrlObj = new URL(event.request.url);
   if (event.request.url.indexOf("restaurant.html") > -1) {
@@ -66,18 +64,16 @@ self.addEventListener('fetch', event => {
 
   // Handle AJAX Requests Separately to use indexDB
   const checkURL = new URL(event.request.url);
-  if(checkURL.port === '1337') {
+  if(checkURL.port === "1337") {
     const parts = checkURL.pathname.split("/");
     let id = checkURL
       .searchParams
       .get("restaurant_id") - 0;
-      console.log(id);
     if (!id) {
       if (checkURL.pathname.indexOf("restaurants")) {
         id = parts[parts.length - 1] === "restaurants"
           ? "-1"
           : parts[parts.length - 1];
-        console.log(id);
       } else {
         id = checkURL
           .searchParams
@@ -102,19 +98,16 @@ const handleAJAXEvent = (event, id) => {
     return event.respondWith(
       fetch(event.request)
         .then(fetchResponse => {
-          console.log('successfully posted from service worker');
           return fetchResponse;
         })
     );
-  };
+  }
 
   // Split these request for handling restaurants vs reviews
   if (event.request.url.indexOf("reviews") > -1) {
     handleReviewsEvent(event, id);
-    console.log('reviews get event');
   } else {
     handleRestaurantEvent(event, id);
-    console.log('restaurant get event');
   }
 }
 
@@ -186,26 +179,26 @@ const handleRestaurantEvent = (event, id) => {
 };
 
 const handleNonAJAXEvent = (event, cacheRequest) => {
-  event.respondWith(
-    caches.match(cacheRequest).then(response => {
-      console.log(response);
-      return (
-        response || fetch(event.request)
-        .then(fetchResponse => {
-          console.log(fetchResponse);
-          return caches.open(cacheID).then(cache => {
+  // Check if the HTML request has previously been cached. If so, return the
+  // response from the cache. If not, fetch the request, cache it, and then return
+  // it.
+  event.respondWith(caches.match(cacheRequest).then(response => {
+    return (response || fetch(event.request).then(fetchResponse => {
+      return caches
+        .open(cacheID)
+        .then(cache => {
+          if (fetchResponse.url.indexOf("browser-sync") === -1) {
             cache.put(event.request, fetchResponse.clone());
-            return fetchResponse;
-          });
-        }).catch(error => {
-          return new Response('Application is not connected', {
-            status: 404,
-            statusText: "Application is not connected to internet"
-          });
-        })
-      );
-    })
-  );
-}
+          }
+          return fetchResponse;
+        });
+    }).catch(error => {
+      return new Response("Application is not connected to the internet", {
+        status: 404,
+        statusText: "Application is not connected to the internet"
+      });
+    }));
+  }));
+};
 
 

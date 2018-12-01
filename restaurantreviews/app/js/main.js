@@ -174,8 +174,8 @@ const createRestaurantHTML = restaurant => {
   const favButton = document.createElement('button');
   favButton.classList.add("fav-icon__button");
   favButton.style.background = isFavorite
-    ? 'url("/img/icons/heart-solid.svg") no-repeat'
-    : 'url("/img/icons/heart-regular.svg") no-repeat';
+    ? 'url("icons/heart-solid.svg") no-repeat'
+    : 'url("icons/heart-regular.svg") no-repeat';
   favButton.innerHTML = isFavorite
     ? "restaurant.name" + " is favorited"
     : "restaurant.name" + " is not favorite";

@@ -44,7 +44,7 @@ const fetchRestaurantFromURL = callback => {
 /**
  * Create restaurant HTML and add it to the webpage
  */
-fillRestaurantHTML = (restaurant = self.restaurant) => {
+const fillRestaurantHTML = (restaurant = self.restaurant) => {
   const main = document.querySelector('.maincontent');
   const isFavorite = (restaurant["is_favorite"] && restaurant["is_favorite"].toString() === "true") ? true : false;
   const favDiv = document.createElement('div');
@@ -52,8 +52,8 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   const favButton = document.createElement('button');
   favButton.classList.add("fav-icon__button");
   favButton.style.background = isFavorite
-    ? 'url("/img/icons/heart-solid.svg") no-repeat'
-    : 'url("/img/icons/heart-regular.svg") no-repeat';
+    ? 'url("/icons/heart-solid.svg") no-repeat'
+    : 'url("icons/heart-regular.svg") no-repeat';
   favButton.innerHTML = isFavorite
     ? "restaurant.name" + " is favorited"
     : "restaurant.name" + " is not favorite";
@@ -113,6 +113,13 @@ const fillBreadcrumb = (restaurant = self.restaurant) => {
   breadcrumb.appendChild(li2);
 };
 
+const handleFavoriteClick = (id, newState) => {
+  // Update properties of the restaurant data object
+  const favorite = document.getElementById("favorite-icon-" + id);
+  self.restaurant["is_favorite"] = newState;
+  DBHelper.handleFavoriteClick(id, newState);
+  favorite.onclick = event => handleFavoriteClick(restaurant.id, !self.restaurant["is_favorite"]);
+};
 
 const saveReview = () => {
   const name = document.getElementById('reviewer-name').value;

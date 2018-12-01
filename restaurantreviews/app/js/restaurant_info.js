@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 /**
  * Initialize leaflet map
  */
-initMap = () => {
+const initMap = () => {
   fetchRestaurantFromURL((error, restaurant) => {
     if (error) { // Got an error!
       console.error(error);
@@ -73,8 +73,8 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
   const favButton = document.createElement('button');
   favButton.classList.add("fav-icon__button");
   favButton.style.background = isFavorite
-    ? 'url("/img/icons/heart-solid.svg") no-repeat'
-    : 'url("/img/icons/heart-regular.svg") no-repeat';
+    ? 'url("icons/heart-solid.svg") no-repeat'
+    : 'url("icons/heart-regular.svg") no-repeat';
   favButton.innerHTML = isFavorite
     ? "restaurant.name" + " is favorited"
     : "restaurant.name" + " is not a favorite";
