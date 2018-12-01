@@ -15,7 +15,7 @@ Thre Restaurant Reviews Project is a three stage Udacity review project. Given a
 * IDB for IndexedDB
 * Performance/Progressive Web App/Accessiblity meets Lighthouse 90/70/90 Standards
 
-![restaurant-review-app](rr-screenshot.png)
+![restaurant-review-app](RR-screenshot.png)
 
 ![Completion Certificate](ud-fend-cert.png)
 
