@@ -6,6 +6,7 @@
 Thre Restaurant Reviews Project is a three stage Udacity review project. Given a static webpage the following features were implemented:  
 
 * A fully responsive layout
+* Leaflet map API integration
 * Restaurant Listings Page
 * Restaurant Info Page
 * Accessiblity updates

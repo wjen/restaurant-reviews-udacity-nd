@@ -153,6 +153,7 @@ const handleRestaurantEvent = (event, id) => {
           .get(id);
       })
       .then(data => {
+        console.log(data);
         return (
           (data && data.data) ||
           fetch(event.request)

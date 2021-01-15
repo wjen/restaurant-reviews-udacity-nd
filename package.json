@@ -71,6 +71,7 @@
   "dependencies": {
     "babel-eslint": "^8.2.6",
     "browserify": "^16.2.0",
+    "clean-webpack-plugin": "^3.0.0",
     "gulp-concat": "^2.6.1",
     "idb": "^2.1.1"
   }
